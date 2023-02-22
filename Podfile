@@ -7,6 +7,8 @@ target 'MyPokemon' do
 
   # Pods for MyPokemon
   pod 'Swinject'
+	pod 'RealmSwift'
+	pod 'Kingfisher', '~> 7.0'
 
   target 'MyPokemonTests' do
     inherit! :search_paths

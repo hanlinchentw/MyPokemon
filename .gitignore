@@ -13,8 +13,15 @@ project.xcworkspace
 xcuserdata
 UserInterfaceState.xcuserstate
 project.xcworkspace/
-xcuserdata/
+
 UserInterface.xcuserstate
+
+## User settings
+xcuserdata/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
 
 ## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
 build/
@@ -77,6 +84,8 @@ Carthage/Build/
 Dependencies/
 .accio/
 
+# Cocoapods
+Pods/
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo.

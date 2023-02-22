@@ -17,7 +17,10 @@ class PokemonListCoodinator: Coordinator {
   }
   
   func start() {
+    let apiService = PokemonListService()
+    let viewModel = PokemonListViewModel(apiService: apiService)
     let pokemonListVC = PokemonListViewController()
+    pokemonListVC.viewModel = viewModel
     navigationController.setViewControllers([pokemonListVC], animated: false)
   }
 }

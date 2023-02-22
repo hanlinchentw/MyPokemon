@@ -8,8 +8,10 @@
 import UIKit
 
 class PokemonListViewController: UIViewController {
+  var viewModel: PokemonListViewModel!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    viewModel.fetchList()
   }
 }

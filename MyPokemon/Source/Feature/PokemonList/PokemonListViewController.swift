@@ -13,9 +13,11 @@ class PokemonListViewController: UIViewController {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     collectionView.backgroundColor = .white
     collectionView.register(PokemonListCell.self, forCellWithReuseIdentifier: PokemonListCell.reuseIdentifier)
+    collectionView.register(IndicatorCell.self, forCellWithReuseIdentifier: IndicatorCell.reuseIdentifier)
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     collectionView.dataSource = self
     collectionView.delegate = self
+    collectionView.prefetchDataSource = self
     return collectionView
   }()
   var bottomConstraint: NSLayoutConstraint?
@@ -26,7 +28,6 @@ class PokemonListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    
     viewModel.fetchList()
   }
   
@@ -63,6 +64,9 @@ extension PokemonListViewController {
         appearance.largeTitleTextAttributes = [
           .foregroundColor: UIColor.white // 設定大標題的文字顏色
         ]
+        appearance.titleTextAttributes = [
+          .foregroundColor: UIColor.white
+        ]
         appearance.backgroundColor = .black
         navigationController.navigationBar.scrollEdgeAppearance = appearance
         navigationController.navigationBar.standardAppearance = appearance
@@ -70,10 +74,12 @@ extension PokemonListViewController {
         navigationController.navigationBar.largeTitleTextAttributes = [
           .foregroundColor: UIColor.white // 設定大標題的文字顏色
         ]
+        navigationController.navigationBar.titleTextAttributes = [
+          .foregroundColor: UIColor.white
+        ]
         navigationController.navigationBar.backgroundColor = .black
       }
     }
-    
   }
   
   private func collectionViewLayout() -> UICollectionViewLayout {
@@ -96,6 +102,11 @@ extension PokemonListViewController: UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    if cellShouldLoading(for: indexPath) {
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IndicatorCell.reuseIdentifier, for: indexPath) as! IndicatorCell
+      cell.start()
+      return cell
+    }
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonListCell.reuseIdentifier, for: indexPath) as! PokemonListCell
     let vm = viewModel.cellViewModel(for: indexPath)
     cell.configureCell(vm)
@@ -107,5 +118,16 @@ extension PokemonListViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let vm = viewModel.cellViewModel(for: indexPath)
     coordinator.navigateToDetail(vm.pokemon)
+  }
+}
+
+extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
+  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
+    indexPath.row + 1 >= viewModel.numberOfRows(in: indexPath.section)
+  }
+  func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    if indexPaths.contains(where: cellShouldLoading) {
+      viewModel.fetchList()
+    }
   }
 }

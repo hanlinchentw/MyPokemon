@@ -20,9 +20,9 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
   typealias Response = PokemonResponse
   
   weak var delegate: (any PokemonListViewModelInput)?
-
+  
   var nextUrlString: String?
-
+  
   func loadMore() {
     if let nextUrlString = nextUrlString {
       let nextUrl = URL(string: nextUrlString)
@@ -36,11 +36,11 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
       }
     }
   }
-
+  
   func onHandleFetchResult(_ result: Result<Response, Error>) {
-    print("onHandleFetchResult >>> \(result)")
     switch result {
     case .success(let success):
+      self.nextUrlString = success.next
       let pokemonLists = success.results
       delegate?.onFetchCompletd(pokemonLists)
     case .failure(let failure):

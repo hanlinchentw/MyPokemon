@@ -30,14 +30,7 @@ class PokemonListCoodinator: Coordinator {
   }
   
   func navigateToDetail(_ pokemon: Pokemon) {
-    let apiService = PokemonDetailService()
-    let viewModel = PokemonDetailViewModel(pokemon: pokemon, apiService: apiService)
-    let detailVC = PokemonDetailViewController()
-    
-    detailVC.viewModel = viewModel
-    apiService.delegate = viewModel
-    viewModel.viewInput = detailVC
-    
-    navigationController.pushViewController(detailVC, animated: true)
+    let detailCoordinator = PokemonDetailCoodinator(navigationController: navigationController)
+    detailCoordinator.start(pokemon: pokemon)
   }
 }

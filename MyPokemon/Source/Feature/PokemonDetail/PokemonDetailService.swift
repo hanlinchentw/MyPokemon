@@ -8,14 +8,50 @@
 import Foundation
 
 protocol PokemonDetailServiceImpl {
-  func load(url: String)
+  func load(_ urlString: String)
 }
 
-class PokemonDetailService: PokemonDetailServiceImpl {
+protocol PokemonDetailViewModelInput: AnyObject {
+  func onFetchCompletd(_ result: PokemonDetailService.PokemonDetailResponse)
+  func onFetchFailed(_ result: Error)
+}
 
+
+class PokemonDetailService: PokemonDetailServiceImpl, NetworkRequestNotify {
+  weak var delegate: (any PokemonDetailViewModelInput)?
+  typealias Response = PokemonDetailResponse
   
   
-  func load(url: String) {
-//    NetworkingManager.shared.request(type: <#T##(Decodable & Encodable).Protocol#>, <#T##url: URL?##URL?#>, <#T##method: HttpMethod##HttpMethod#>, completion: <#T##(Result<Decodable & Encodable, Error>) -> Void#>)
+  func load(_ urlString: String) {
+    let url = URL(string: urlString)
+    NetworkingManager.shared.request(type: Response.self, url, .GET) { [weak self] result in
+      self?.onHandleFetchResult(result)
+    }
+  }
+  
+  func onHandleFetchResult(_ result: Result<Response, Error>) {
+    switch result {
+    case .success(let response):
+      delegate?.onFetchCompletd(response)
+    case .failure(let error):
+      delegate?.onFetchFailed(error)
+    }
+  }
+}
+
+extension PokemonDetailService {
+  struct PokemonDetailResponse: Codable {
+    let id: Int
+    let name: String
+    let height: Int
+    let weight: Int
+    let sprites: Sprite
+  }
+
+  struct Sprite: Codable {
+    let imageUrl: String
+    enum CodingKeys: String, CodingKey {
+      case imageUrl = "front_default"
+    }
   }
 }

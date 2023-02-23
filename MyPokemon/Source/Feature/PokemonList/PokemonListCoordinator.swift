@@ -31,11 +31,13 @@ class PokemonListCoodinator: Coordinator {
   
   func navigateToDetail(_ pokemon: Pokemon) {
     let apiService = PokemonDetailService()
-    let viewModel = PokemonDetailViewModel(apiService: apiService)
+    let viewModel = PokemonDetailViewModel(pokemon: pokemon, apiService: apiService)
     let detailVC = PokemonDetailViewController()
     
     detailVC.viewModel = viewModel
-    
+    apiService.delegate = viewModel
+    viewModel.viewInput = detailVC
+
     navigationController.pushViewController(detailVC, animated: true)
   }
 }

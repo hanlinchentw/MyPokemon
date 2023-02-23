@@ -12,11 +12,18 @@ protocol PokemonListServiceImpl {
 }
 
 class PokemonListService: PokemonListServiceImpl {
-  var nextUrl: String?
+  var nextUrlString: String?
   func loadMore() {
-    let url = nextUrl ?? PokemonEndpoint.url
-    NetworkingManager.shared.request(type: PokemonResponse.self, url, .GET) { result in
-      print("result \(result)")
+    if let nextUrlString = nextUrlString {
+      let nextUrl = URL(string: nextUrlString)
+      NetworkingManager.shared.request(type: PokemonResponse.self, nextUrl, .GET) { result in
+        print("result \(result)")
+      }
+    } else {
+      let request = GetPokemonRequest()
+      NetworkingManager.shared.request(type: PokemonResponse.self, request) { result in
+        print("result \(result)")
+      }
     }
   }
 }

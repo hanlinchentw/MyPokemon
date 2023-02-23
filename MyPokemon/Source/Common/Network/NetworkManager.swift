@@ -9,6 +9,7 @@ import Foundation
 
 protocol NetworkingManagerImpl {
   func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, completion: @escaping(Result<T, Error>) -> Void)
+  func request<T: Codable>(type: T.Type, _ request: HttpRequest, completion: @escaping(Result<T, Error>) -> Void)
 }
 
 final class NetworkingManager: NetworkingManagerImpl {
@@ -16,6 +17,39 @@ final class NetworkingManager: NetworkingManagerImpl {
   static let shared = NetworkingManager()
   
   private init() {}
+  
+  func request<T: Codable>(type: T.Type,_ request: HttpRequest, completion: @escaping(Result<T, Error>) -> Void) {
+    guard let url = request.url else {
+      completion(.failure(NetworkingError.invalidUrl))
+      return
+    }
+    
+    let request = buildRequest(from: url, methodType: request.method)
+
+    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      guard let response = response as? HTTPURLResponse else {
+        completion(.failure(NetworkingError.invalidResponse))
+        return
+      }
+      guard (200...300) ~= response.statusCode else {
+        completion(.failure(NetworkingError.invalidStatusCode(statusCode: response.statusCode)))
+        return
+      }
+      guard let data = data else {
+        completion(.failure(NetworkingError.invalidData))
+        return
+      }
+      
+      let decoder = JSONDecoder()
+      decoder.keyDecodingStrategy = .convertFromSnakeCase
+      guard let res = try? decoder.decode(T.self, from: data) else {
+        completion(.failure(NetworkingError.failedToDecode))
+        return
+      }
+      completion(.success(res))
+    }
+    task.resume()
+  }
   
   func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, completion: @escaping(Result<T, Error>) -> Void) {
     guard let url = url else {

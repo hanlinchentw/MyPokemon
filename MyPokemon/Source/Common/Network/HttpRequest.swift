@@ -1,5 +1,5 @@
 //
-//  EndPoint.swift
+//  HttpRequest.swift
 //  MyPokemon
 //
 //  Created by 陳翰霖 on 2023/2/23.
@@ -7,34 +7,16 @@
 
 import Foundation
 
-enum PokemonEndpoint {
-  case pokemons
-  case detail(String)
+protocol HttpRequest {
+  var host: String { get }
+  var path: String { get }
+  var method: HttpMethod { get }
+  var queryItem: [String:String]? { get }
 }
 
-extension PokemonEndpoint {
-  var host: String { "pokeapi.co"}
-
-  var path: String {
-    switch self {
-    case .pokemons:
-      return "/api/v2/pokemon"
-    case .detail(let id):
-      return "/api/v2/pokemon/\(id)"
-    }
-  }
+extension HttpRequest {
+  var queryItems: [String:String]? { nil }
   
-  var methodType: HttpMethod {
-    switch self {
-    case .pokemons, .detail:
-      return .GET
-    }
-  }
-  
-  var queryItems: [String: String]? {
-    return nil
-  }
-
   var url: URL? {
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"

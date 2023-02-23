@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Coordinator: class {
+protocol Coordinator: AnyObject {
   var coordinators: [Coordinator] { get set }
 }
 

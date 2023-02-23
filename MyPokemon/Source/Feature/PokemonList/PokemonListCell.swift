@@ -12,8 +12,7 @@ class PokemonListCell: UICollectionViewCell {
 
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: 32)
-    label.text = "test"
+    label.font = UIFont(name: "Arial", size: 24)
     label.textColor = .black
     return label
   }()
@@ -21,7 +20,6 @@ class PokemonListCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     layer.cornerRadius = 16
-
     titleLabel.frame = bounds
     addSubview(titleLabel)
   }
@@ -31,7 +29,6 @@ class PokemonListCell: UICollectionViewCell {
   }
   
   func configureCell(_ vm: PokemonListItemViewModel) {
-    print("cell: \(vm.name)")
-    self.titleLabel.text = vm.name
+    self.titleLabel.text = vm.name.capitalized
   }
 }

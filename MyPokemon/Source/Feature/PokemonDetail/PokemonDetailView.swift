@@ -10,19 +10,18 @@ import UIKit
 
 class PokemonDetailView: UIView {
   
+  // UI Components
   let imageView = UIImageView()
-  
-  // UITableView
   let tableView = UITableView()
   
-  // 資料
+  // Data
   var pokemonDetail: PokemonDetail? {
     didSet {
       configure()
     }
   }
   
-  // 初始化
+  // Lifecycle
   init() {
     super.init(frame: .zero)
     setupUI()
@@ -32,6 +31,7 @@ class PokemonDetailView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // Setup UI
   func configure() {
     tableView.reloadData()
     if let url = URL(string: pokemonDetail?.imageUrl ?? "") {
@@ -40,7 +40,6 @@ class PokemonDetailView: UIView {
     }
   }
   
-  // 設定 UI
   func setupUI() {
     backgroundColor = .white
     addSubview(imageView)
@@ -53,7 +52,7 @@ class PokemonDetailView: UIView {
       imageView.widthAnchor.constraint(equalToConstant: 120),
       imageView.heightAnchor.constraint(equalToConstant: 120)
     ])
-
+    
     // UITableView
     tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.dataSource = self
@@ -62,7 +61,7 @@ class PokemonDetailView: UIView {
     tableView.tableFooterView = UIView() // 隱藏 UITableView 底部多餘的 separator line
     tableView.backgroundColor = .lightGray // 使用 group style 的背景顏色
     addSubview(tableView)
-
+    
     NSLayoutConstraint.activate([
       tableView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
       tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -72,9 +71,8 @@ class PokemonDetailView: UIView {
   }
 }
 
-// 實作 UITableViewDataSource 與 UITableViewDelegate
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension PokemonDetailView: UITableViewDataSource, UITableViewDelegate {
-  
   // UITableView 的 section 數量
   func numberOfSections(in tableView: UITableView) -> Int {
     return 3
@@ -84,7 +82,7 @@ extension PokemonDetailView: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     switch section {
     case 0:
-      return 1 // Pokemon 編號和名稱
+      return 1 // Pokemon 編號
     case 1:
       return 2 // 身高和體重
     case 2:

@@ -79,7 +79,7 @@ extension PokemonListViewController {
   private func collectionViewLayout() -> UICollectionViewLayout {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .vertical
-    layout.itemSize = CGSize(width: 250, height: 100)
+    layout.itemSize = CGSize(width: 360, height: 120)
     return layout
   }
 }

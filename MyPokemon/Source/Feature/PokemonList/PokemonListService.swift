@@ -11,24 +11,45 @@ protocol PokemonListServiceImpl {
   func loadMore()
 }
 
-class PokemonListService: PokemonListServiceImpl {
+protocol PokemonListViewModelInput: AnyObject {
+  func onFetchCompletd(_ result: Array<Pokemon>)
+  func onFetchFailed(_ result: Error)
+}
+
+class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
+  typealias Response = PokemonResponse
+  
+  weak var delegate: (any PokemonListViewModelInput)?
+
   var nextUrlString: String?
+
   func loadMore() {
     if let nextUrlString = nextUrlString {
       let nextUrl = URL(string: nextUrlString)
-      NetworkingManager.shared.request(type: PokemonResponse.self, nextUrl, .GET) { result in
-        print("result \(result)")
+      NetworkingManager.shared.request(type: Response.self, nextUrl, .GET) { [weak self] result in
+        self?.onHandleFetchResult(result)
       }
     } else {
       let request = GetPokemonRequest()
-      NetworkingManager.shared.request(type: PokemonResponse.self, request) { result in
-        print("result \(result)")
+      NetworkingManager.shared.request(type: Response.self, request) { [weak self] result in
+        self?.onHandleFetchResult(result)
       }
+    }
+  }
+
+  func onHandleFetchResult(_ result: Result<Response, Error>) {
+    print("onHandleFetchResult >>> \(result)")
+    switch result {
+    case .success(let success):
+      let pokemonLists = success.results
+      delegate?.onFetchCompletd(pokemonLists)
+    case .failure(let failure):
+      delegate?.onFetchFailed(failure)
     }
   }
 }
 
-private extension PokemonListService {
+extension PokemonListService {
   struct PokemonResponse: Codable {
     var next: String
     var results: Array<Pokemon>

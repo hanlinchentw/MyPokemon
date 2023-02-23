@@ -8,5 +8,10 @@
 import UIKit
 
 class PokemonDetailViewController: UIViewController {
+  var viewModel: (any PokemonDetailViewModelImpl)!
   
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = .blue
+  }
 }

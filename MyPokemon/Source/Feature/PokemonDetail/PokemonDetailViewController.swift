@@ -12,6 +12,12 @@ class PokemonDetailViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .blue
+    viewModel.fetch()
+  }
+}
+
+extension PokemonDetailViewController: PokemonDetailViewInput {
+  func update() {
+    print("PokemonDetailViewController=\(viewModel.detail)")
   }
 }

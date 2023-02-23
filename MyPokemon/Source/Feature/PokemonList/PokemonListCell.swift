@@ -20,15 +20,10 @@ class PokemonListCell: UICollectionViewCell {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    backgroundColor = .blue
     layer.cornerRadius = 16
 
+    titleLabel.frame = bounds
     addSubview(titleLabel)
-    
-    NSLayoutConstraint.activate([
-      titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-      titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-    ])
   }
   
   required init?(coder: NSCoder) {

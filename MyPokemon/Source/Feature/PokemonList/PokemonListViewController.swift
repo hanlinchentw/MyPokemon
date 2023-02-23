@@ -19,16 +19,20 @@ class PokemonListViewController: UIViewController {
     return collectionView
   }()
   var bottomConstraint: NSLayoutConstraint?
-
+  
   var viewModel: PokemonListViewModel!
   var coordinator: PokemonListCoodinator!
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    setupNavigationItem()
-
+    
     viewModel.fetchList()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    setupNavigationController()
   }
 }
 // MARK: - Setup UI
@@ -48,8 +52,28 @@ extension PokemonListViewController {
     ])
   }
   
-  private func setupNavigationItem() {
+  private func setupNavigationController() {
     self.navigationItem.title = "Pokemon"
+    self.navigationController?.navigationBar.prefersLargeTitles = true
+    
+    if let navigationController = navigationController {
+      if #available(iOS 15.0, *) {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.largeTitleTextAttributes = [
+          .foregroundColor: UIColor.white // 設定大標題的文字顏色
+        ]
+        appearance.backgroundColor = .black
+        navigationController.navigationBar.scrollEdgeAppearance = appearance
+        navigationController.navigationBar.standardAppearance = appearance
+      } else {
+        navigationController.navigationBar.largeTitleTextAttributes = [
+          .foregroundColor: UIColor.white // 設定大標題的文字顏色
+        ]
+        navigationController.navigationBar.backgroundColor = .black
+      }
+    }
+    
   }
   
   private func collectionViewLayout() -> UICollectionViewLayout {
@@ -70,7 +94,7 @@ extension PokemonListViewController: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     viewModel.numberOfRows(in: section)
   }
-
+  
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonListCell.reuseIdentifier, for: indexPath) as! PokemonListCell
     let vm = viewModel.cellViewModel(for: indexPath)

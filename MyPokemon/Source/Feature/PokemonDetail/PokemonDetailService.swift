@@ -46,6 +46,7 @@ extension PokemonDetailService {
     let height: Int
     let weight: Int
     let sprites: Sprite
+    let types: Array<PokemonTypeSlot>
   }
 
   struct Sprite: Codable {
@@ -53,5 +54,14 @@ extension PokemonDetailService {
     enum CodingKeys: String, CodingKey {
       case imageUrl = "front_default"
     }
+  }
+  
+  struct PokemonTypeSlot: Codable {
+    let slot: Int
+    let type: PokemonType
+  }
+  
+  struct PokemonType: Codable {
+    let name: String
   }
 }

@@ -13,4 +13,5 @@ struct PokemonDetail {
   let height: Int
   let weight: Int
   let imageUrl: String
+  let types: [String]
 }

@@ -28,6 +28,7 @@ class PokemonListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
+    setupPocketBtn()
     viewModel.fetchList()
   }
   
@@ -36,6 +37,49 @@ class PokemonListViewController: UIViewController {
     setupNavigationController()
   }
 }
+extension PokemonListViewController: PokemonListViewModelDelegate {
+  func refresh() {
+    collectionView.reloadData()
+  }
+}
+
+extension PokemonListViewController: UICollectionViewDataSource {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    viewModel.numberOfRows(in: section)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    if cellShouldLoading(for: indexPath) {
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IndicatorCell.reuseIdentifier, for: indexPath) as! IndicatorCell
+      cell.start()
+      return cell
+    }
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonListCell.reuseIdentifier, for: indexPath) as! PokemonListCell
+    let vm = viewModel.cellViewModel(for: indexPath)
+    cell.configureCell(vm)
+    return cell
+  }
+}
+
+
+extension PokemonListViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let vm = viewModel.cellViewModel(for: indexPath)
+    coordinator.navigateToDetail(vm.pokemon)
+  }
+}
+
+extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
+  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
+    indexPath.row + 1 >= viewModel.numberOfRows(in: indexPath.section)
+  }
+  func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    if indexPaths.contains(where: cellShouldLoading) {
+      viewModel.fetchList()
+    }
+  }
+}
+
 // MARK: - Setup UI
 extension PokemonListViewController {
   private func setupUI() {
@@ -90,44 +134,28 @@ extension PokemonListViewController {
   }
 }
 
-extension PokemonListViewController: PokemonListViewModelDelegate {
-  func refresh() {
-    collectionView.reloadData()
-  }
-}
+extension PokemonListViewController {
+  func setupPocketBtn() {
+    let button = UIButton(type: .custom)
+    button.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+    button.tintColor = .systemRed
+    button.backgroundColor = .white
+    button.layer.cornerRadius = 30
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.addTarget(self, action: #selector(handleButtonTap(_:)), for: .touchUpInside)
+    button.addShadow()
 
-extension PokemonListViewController: UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    viewModel.numberOfRows(in: section)
+    self.view.addSubview(button)
+
+    NSLayoutConstraint.activate([
+        button.widthAnchor.constraint(equalToConstant: 60),
+        button.heightAnchor.constraint(equalToConstant: 60),
+        button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+        button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+    ])
   }
   
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    if cellShouldLoading(for: indexPath) {
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IndicatorCell.reuseIdentifier, for: indexPath) as! IndicatorCell
-      cell.start()
-      return cell
-    }
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonListCell.reuseIdentifier, for: indexPath) as! PokemonListCell
-    let vm = viewModel.cellViewModel(for: indexPath)
-    cell.configureCell(vm)
-    return cell
-  }
-}
-
-extension PokemonListViewController: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let vm = viewModel.cellViewModel(for: indexPath)
-    coordinator.navigateToDetail(vm.pokemon)
-  }
-}
-
-extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
-  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
-    indexPath.row + 1 >= viewModel.numberOfRows(in: indexPath.section)
-  }
-  func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-    if indexPaths.contains(where: cellShouldLoading) {
-      viewModel.fetchList()
-    }
+  @objc private func handleButtonTap(_ sender: UIButton) {
+    coordinator.navigateToPocket()
   }
 }

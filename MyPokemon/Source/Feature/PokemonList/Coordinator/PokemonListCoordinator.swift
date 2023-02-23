@@ -33,4 +33,9 @@ class PokemonListCoodinator: Coordinator {
     let detailCoordinator = PokemonDetailCoodinator(navigationController: navigationController)
     detailCoordinator.start(pokemon: pokemon)
   }
+  
+  func navigateToPocket() {
+    let pocketCoordinator = PocketCoodinator(navigationController: navigationController)
+    pocketCoordinator.start()
+  }
 }

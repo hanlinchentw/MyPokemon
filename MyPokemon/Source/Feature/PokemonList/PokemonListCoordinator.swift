@@ -22,9 +22,20 @@ class PokemonListCoodinator: Coordinator {
     let pokemonListVC = PokemonListViewController()
 
     pokemonListVC.viewModel = viewModel
+    pokemonListVC.coordinator = self
     apiService.delegate = viewModel
     viewModel.delegate = pokemonListVC
-
+    
     navigationController.setViewControllers([pokemonListVC], animated: false)
+  }
+  
+  func navigateToDetail(_ pokemon: Pokemon) {
+    let apiService = PokemonDetailService()
+    let viewModel = PokemonDetailViewModel(apiService: apiService)
+    let detailVC = PokemonDetailViewController()
+    
+    detailVC.viewModel = viewModel
+    
+    navigationController.pushViewController(detailVC, animated: true)
   }
 }

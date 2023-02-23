@@ -15,11 +15,13 @@ class PokemonListViewController: UIViewController {
     collectionView.register(PokemonListCell.self, forCellWithReuseIdentifier: PokemonListCell.reuseIdentifier)
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     collectionView.dataSource = self
+    collectionView.delegate = self
     return collectionView
   }()
   var bottomConstraint: NSLayoutConstraint?
 
   var viewModel: PokemonListViewModel!
+  var coordinator: PokemonListCoodinator!
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -74,5 +76,12 @@ extension PokemonListViewController: UICollectionViewDataSource {
     let vm = viewModel.cellViewModel(for: indexPath)
     cell.configureCell(vm)
     return cell
+  }
+}
+
+extension PokemonListViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let vm = viewModel.cellViewModel(for: indexPath)
+    coordinator.navigateToDetail(vm.pokemon)
   }
 }

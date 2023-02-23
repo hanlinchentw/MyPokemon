@@ -17,7 +17,12 @@ class PocketCoodinator: Coordinator {
   }
   
   func start() {
+    let viewModel = PocketViewModel()
     let pocketVC = PocketViewController()
+    
+    pocketVC.viewModel = viewModel
+    viewModel.viewInput = pocketVC
+
     navigationController.present(pocketVC, animated: true)
   }
 }

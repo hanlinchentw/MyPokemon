@@ -39,7 +39,8 @@ class PokemonDetailViewModel: PokemonDetailViewModelImpl {
 extension PokemonDetailViewModel: PokemonDetailViewModelInput {
   func onFetchCompletd(_ result: PokemonDetailService.PokemonDetailResponse) {
     print("onFetchCompletd=\(result)")
-    let detail = PokemonDetail(id: result.id, name: result.name, height: result.height, weight: result.weight, imageUrl: result.sprites.imageUrl)
+    let types = result.types.map { $0.type.name }
+    let detail = PokemonDetail(id: result.id, name: result.name, height: result.height, weight: result.weight, imageUrl: result.sprites.imageUrl, types: types)
     self.detail = detail
   }
   

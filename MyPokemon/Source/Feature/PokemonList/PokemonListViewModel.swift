@@ -12,11 +12,12 @@ protocol PokemonListViewModelImpl {
 }
 
 protocol PokemonListViewModelDelegate: AnyObject {
-    func refresh()
+  func refresh()
 }
 
 class PokemonListViewModel: PokemonListViewModelImpl {
-
+  private var isFetchInProgress = false
+  
   let apiService: PokemonListServiceImpl
   
   weak var delegate: PokemonListViewModelDelegate?
@@ -34,6 +35,14 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
   
   func fetchList() {
+    guard !isFetchInProgress else {
+      return
+    }
+    isFetchInProgress = true
+    apiService.loadMore()
+  }
+  
+  func fetchMore() {
     apiService.loadMore()
   }
   
@@ -52,12 +61,13 @@ class PokemonListViewModel: PokemonListViewModelImpl {
 
 extension PokemonListViewModel: PokemonListViewModelInput {
   func onFetchCompletd(_ result: Array<Pokemon>) {
-    self.sections = result.compactMap({ pokemon in
+    self.sections += result.compactMap({ pokemon in
       PokemonListItemViewModel(pokemon: pokemon)
     })
+    self.isFetchInProgress = false
   }
   
   func onFetchFailed(_ result: Error) {
-    
+    self.isFetchInProgress = false
   }
 }

@@ -25,6 +25,7 @@ class PokemonListCoodinator: Coordinator {
     pokemonListVC.viewModel = viewModel
     pokemonListVC.coordinator = self
     apiService.delegate = viewModel
+    persistenceService.delegate = viewModel
     viewModel.delegate = pokemonListVC
     
     navigationController.setViewControllers([pokemonListVC], animated: false)

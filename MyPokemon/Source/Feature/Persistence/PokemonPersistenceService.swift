@@ -13,34 +13,44 @@ protocol PokemonPersistenceServiceImpl {
   func release(_ pokemon: Pokemon)
 }
 
+protocol PokemonPersistenceServiceDelegate: AnyObject {
+  func onDataChanged(_ change: Array<RLM_Pokemon>)
+}
+
 class PokemonPersistenceService: PokemonPersistenceServiceImpl {
+  
+  weak var delegate: PokemonPersistenceServiceDelegate?
   var manager: PersistenceManagerImpl
+  
+  var notificationToken: NotificationToken?
   
   init(manager: PersistenceManagerImpl = PersistenceManager.shared) {
     self.manager = manager
+    observePersistenceChange()
   }
   
   func capture(_ pokemon: Pokemon) {
-    let rlm_pokemon = RLM_Pokemon(name: pokemon.name)
+    let rlm_pokemon = RLM_Pokemon(id: pokemon.id, name: pokemon.name, detailUrl: pokemon.detailUrl)
     manager.add(rlm_pokemon, update: true)
-    
-    let token = rlm_pokemon.observe { change in
-      print("rlm_pokemon change=\(change)")
-    }
-    token.invalidate()
   }
   
   func release(_ pokemon: Pokemon) {
-    let rlm_pokemon = RLM_Pokemon(name: pokemon.name)
-    manager.delete(rlm_pokemon)
-    
-    let token = rlm_pokemon.observe { change in
-      print("rlm_pokemon change=\(change)")
+    let predicate = NSPredicate(format: "name==%@", pokemon.name)
+    if let object = manager.objects(RLM_Pokemon.self, predicate: predicate)?.first {
+      manager.delete(object)
     }
-    token.invalidate()
   }
   
   func observePersistenceChange() {
+    let pokemons = manager.getRealm().objects(RLM_Pokemon.self)
     
+    notificationToken = pokemons.observe() { [weak self] change in
+      switch change {
+      case .initial(let pokemons), .update(let pokemons, _, _, _):
+        self?.delegate?.onDataChanged(pokemons.map { $0 })
+      case .error(let error):
+        print("persistence change error=\(error.localizedDescription)")
+      }
+    }
   }
 }

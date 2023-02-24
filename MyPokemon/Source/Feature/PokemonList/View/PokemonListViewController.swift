@@ -37,7 +37,7 @@ class PokemonListViewController: UIViewController {
     setupNavigationController()
   }
 }
-extension PokemonListViewController: PokemonListViewModelDelegate {
+extension PokemonListViewController: PokemonListViewModelDelegate {  
   func refresh() {
     collectionView.reloadData()
   }
@@ -80,8 +80,8 @@ extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
 }
 
 extension PokemonListViewController: PokemonListCellDelegate {
-  func didTapCaptureButton(_ pokemon: Pokemon) {
-    viewModel.capture(pokemon)
+  func didTapCaptureButton(pokemon: Pokemon, isCapture: Bool) {
+    viewModel.didTapBtn(pokemon, isCapture)
   }
 }
 

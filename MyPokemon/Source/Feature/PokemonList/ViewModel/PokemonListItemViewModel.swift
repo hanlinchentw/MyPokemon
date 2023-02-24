@@ -17,4 +17,6 @@ class PokemonListItemViewModel {
   var name: String {
     pokemon.name
   }
+  
+  var isCapture: Bool = false
 }

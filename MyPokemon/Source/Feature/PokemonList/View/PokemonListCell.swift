@@ -7,8 +7,19 @@
 
 import UIKit
 
-class PokemonListCell: UICollectionViewCell {
+protocol PokemonListCellDelegate: AnyObject {
+  func didTapCaptureButton(_ pokemon: Pokemon)
+}
 
+class PokemonListCell: UICollectionViewCell {
+  weak var delegate: PokemonListCellDelegate?
+
+  var viewModel: PokemonListItemViewModel? {
+    didSet {
+      configureCell()
+    }
+  }
+  
   private let stackView: UIStackView = {
       let stackView = UIStackView()
       stackView.axis = .horizontal
@@ -31,18 +42,36 @@ class PokemonListCell: UICollectionViewCell {
       return iv
   }()
   
+  private lazy var captureButton: UIButton = {
+    let button = UIButton()
+    button.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+    button.tintColor = .red
+    button.addTarget(self, action: #selector(handleCaptureBtnTapped), for: .touchUpInside)
+    return button
+  }()
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     layer.cornerRadius = 16
 
+    contentView.addSubview(captureButton)
     stackView.addArrangedSubview(titleLabel)
     stackView.addArrangedSubview(chevronImageView)
     contentView.addSubview(stackView)
     
+    captureButton.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      captureButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+      captureButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+      captureButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
+      captureButton.widthAnchor.constraint(equalToConstant: 44),
+      captureButton.widthAnchor.constraint(equalToConstant: 44)
+    ])
+
     stackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
       stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-      stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+      stackView.leadingAnchor.constraint(equalTo: captureButton.trailingAnchor, constant: 16),
       stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
       stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
     ])
@@ -52,7 +81,18 @@ class PokemonListCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configureCell(_ vm: PokemonListItemViewModel) {
+  func configureCell() {
+    guard let vm = viewModel else {
+      self.titleLabel.text = "Failed to load ..."
+      return
+    }
     self.titleLabel.text = vm.name.capitalized
+  }
+  
+  @objc func handleCaptureBtnTapped() {
+    guard let vm = viewModel else {
+      return
+    }
+    delegate?.didTapCaptureButton(vm.pokemon)
   }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 protocol PokemonListViewModelImpl {
   func fetchList()
@@ -16,9 +17,10 @@ protocol PokemonListViewModelDelegate: AnyObject {
 }
 
 class PokemonListViewModel: PokemonListViewModelImpl {
-  private var isFetchInProgress = false
+  var isFetching = false
   
   let apiService: PokemonListServiceImpl
+  let persistenceService: PokemonPersistenceServiceImpl
   
   weak var delegate: PokemonListViewModelDelegate?
   
@@ -30,20 +32,21 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     }
   }
   
-  init(apiService: PokemonListServiceImpl) {
+  init(apiService: PokemonListServiceImpl, persistenceService: PokemonPersistenceServiceImpl) {
     self.apiService = apiService
+    self.persistenceService = persistenceService
   }
   
   func fetchList() {
-    guard !isFetchInProgress else {
+    guard !isFetching else {
       return
     }
-    isFetchInProgress = true
+    isFetching = true
     apiService.loadMore()
   }
   
-  func fetchMore() {
-    apiService.loadMore()
+  func capture(_ pokemon: Pokemon) {
+    persistenceService.capture(pokemon)
   }
   
   var numberOfSection: Int {
@@ -61,13 +64,17 @@ class PokemonListViewModel: PokemonListViewModelImpl {
 
 extension PokemonListViewModel: PokemonListViewModelInput {
   func onFetchCompletd(_ result: Array<Pokemon>) {
-    self.sections += result.compactMap({ pokemon in
-      PokemonListItemViewModel(pokemon: pokemon)
-    })
-    self.isFetchInProgress = false
+    DispatchQueue.main.async {
+      self.sections += result.compactMap({ pokemon in
+        PokemonListItemViewModel(pokemon: pokemon)
+      })
+      self.isFetching = false
+    }
   }
   
   func onFetchFailed(_ result: Error) {
-    self.isFetchInProgress = false
+    DispatchQueue.main.async {
+      self.isFetching = false
+    }
   }
 }

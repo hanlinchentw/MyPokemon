@@ -80,6 +80,12 @@ class PokemonListCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.titleLabel.text = ""
+    captureButton.setImage(nil, for: .normal)
+  }
+  
   func configureCell() {
     guard let vm = viewModel else {
       self.titleLabel.text = "Failed to load ..."

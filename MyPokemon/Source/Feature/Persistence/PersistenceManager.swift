@@ -9,6 +9,8 @@ import Foundation
 import RealmSwift
 
 protocol PersistenceManagerImpl {
+  func getRealm() -> Realm
+  func objects<T: Object>(_ type: T.Type, predicate: NSPredicate?) -> Results<T>?
   func object<T: Object>(_ type: T.Type, key: Any) -> T?
   func add<T: Object>(_ data: [T], update: Bool)
   func add<T: Object>(_ data: T, update: Bool)
@@ -19,7 +21,7 @@ protocol PersistenceManagerImpl {
 class PersistenceManager: PersistenceManagerImpl{
   static let shared = PersistenceManager()
   
-  private func getRealm() -> Realm {
+  func getRealm() -> Realm {
     if let _ = NSClassFromString("XCTest") {
       return try! Realm(configuration: Realm.Configuration(fileURL: nil, inMemoryIdentifier: "test", encryptionKey: nil, readOnly: false, schemaVersion: 0, migrationBlock: nil, objectTypes: nil))
     } else {
@@ -30,7 +32,6 @@ class PersistenceManager: PersistenceManagerImpl{
   func objects<T: Object>(_ type: T.Type, predicate: NSPredicate? = nil) -> Results<T>? {
     let realm = getRealm()
     realm.refresh()
-    
     return predicate == nil ? realm.objects(type) : realm.objects(type).filter(predicate!)
   }
   

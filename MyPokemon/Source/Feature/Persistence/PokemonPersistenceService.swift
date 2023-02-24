@@ -10,7 +10,7 @@ import RealmSwift
 
 protocol PokemonPersistenceServiceImpl {
   func capture(_ pokemon: Pokemon)
-  func release(_ pokemon: Pokemon)
+  func release(_ name: String)
 }
 
 protocol PokemonPersistenceServiceDelegate: AnyObject {
@@ -33,9 +33,9 @@ class PokemonPersistenceService: PokemonPersistenceServiceImpl {
     let rlm_pokemon = RLM_Pokemon(id: pokemon.id, name: pokemon.name, detailUrl: pokemon.detailUrl)
     manager.add(rlm_pokemon, update: true)
   }
-  
-  func release(_ pokemon: Pokemon) {
-    let predicate = NSPredicate(format: "name==%@", pokemon.name)
+
+  func release(_ name: String) {
+    let predicate = NSPredicate(format: "name==%@", name)
     if let object = manager.objects(RLM_Pokemon.self, predicate: predicate)?.first {
       manager.delete(object)
     }

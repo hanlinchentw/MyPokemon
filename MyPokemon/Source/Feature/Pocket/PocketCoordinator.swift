@@ -17,11 +17,13 @@ class PocketCoodinator: Coordinator {
   }
   
   func start() {
-    let viewModel = PocketViewModel()
+    let persistenceService = PokemonPersistenceService()
+    let viewModel = PocketViewModel(persistenceService: persistenceService)
     let pocketVC = PocketViewController()
     
     pocketVC.viewModel = viewModel
     viewModel.viewInput = pocketVC
+    persistenceService.delegate = viewModel
 
     navigationController.present(pocketVC, animated: true)
   }

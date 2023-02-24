@@ -18,8 +18,7 @@ class PocketViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    viewModel.fetch()
-
+    tableView.isEditing = true
     tableView.delegate = self
     tableView.dataSource = self    
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: PocketViewController.cellIdentifier)
@@ -43,9 +42,15 @@ extension PocketViewController: UITableViewDataSource, UITableViewDelegate {
     cell.textLabel?.text = viewModel.data[indexPath.row].name
     return cell
   }
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    print("Selected item at row \(indexPath.row)")
+
+  func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    .delete
+  }
+
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+      if editingStyle == .delete {
+        viewModel.release(indexPath)
+      }
   }
 }
 

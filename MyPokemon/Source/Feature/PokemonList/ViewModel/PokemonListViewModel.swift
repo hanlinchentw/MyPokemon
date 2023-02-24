@@ -55,7 +55,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   
   func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
     if isCapture {
-      persistenceService.release(pokemon)
+      persistenceService.release(pokemon.name)
     } else {
       persistenceService.capture(pokemon)
     }

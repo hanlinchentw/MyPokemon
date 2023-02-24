@@ -37,7 +37,7 @@ class PokemonListViewController: UIViewController {
     setupNavigationController()
   }
 }
-extension PokemonListViewController: PokemonListViewModelDelegate {
+extension PokemonListViewController: PokemonListViewModelDelegate {  
   func refresh() {
     collectionView.reloadData()
   }
@@ -55,12 +55,11 @@ extension PokemonListViewController: UICollectionViewDataSource {
       return cell
     }
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonListCell.reuseIdentifier, for: indexPath) as! PokemonListCell
-    let vm = viewModel.cellViewModel(for: indexPath)
-    cell.configureCell(vm)
+    cell.viewModel = viewModel.cellViewModel(for: indexPath)
+    cell.delegate = self
     return cell
   }
 }
-
 
 extension PokemonListViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -77,6 +76,12 @@ extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
     if indexPaths.contains(where: cellShouldLoading) {
       viewModel.fetchList()
     }
+  }
+}
+
+extension PokemonListViewController: PokemonListCellDelegate {
+  func didTapCaptureButton(pokemon: Pokemon, isCapture: Bool) {
+    viewModel.didTapBtn(pokemon, isCapture)
   }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 protocol PokemonListViewModelImpl {
   func fetchList()
@@ -16,11 +17,14 @@ protocol PokemonListViewModelDelegate: AnyObject {
 }
 
 class PokemonListViewModel: PokemonListViewModelImpl {
-  private var isFetchInProgress = false
+  var isFetching = false
   
   let apiService: PokemonListServiceImpl
+  let persistenceService: PokemonPersistenceServiceImpl
   
   weak var delegate: PokemonListViewModelDelegate?
+  
+  var notificationToken: NotificationToken?
   
   var sections: [PokemonListItemViewModel] = [] {
     didSet {
@@ -30,20 +34,43 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     }
   }
   
-  init(apiService: PokemonListServiceImpl) {
+  var capturePokemon: Array<Pokemon> = [] {
+    didSet {
+      refreshState()
+    }
+  }
+  
+  init(apiService: PokemonListServiceImpl, persistenceService: PokemonPersistenceServiceImpl) {
     self.apiService = apiService
+    self.persistenceService = persistenceService
   }
   
   func fetchList() {
-    guard !isFetchInProgress else {
+    guard !isFetching else {
       return
     }
-    isFetchInProgress = true
+    isFetching = true
     apiService.loadMore()
   }
   
-  func fetchMore() {
-    apiService.loadMore()
+  func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
+    if isCapture {
+      persistenceService.release(pokemon)
+    } else {
+      persistenceService.capture(pokemon)
+    }
+  }
+  
+  func refreshState() {
+    for index in 0 ..< sections.count {
+      let section = sections[index]
+      if let _ = capturePokemon.first { $0.name == section.name } {
+        self.sections[index].isCapture = true
+      } else {
+        self.sections[index].isCapture = false
+      }
+    }
+    delegate?.refresh()
   }
   
   var numberOfSection: Int {
@@ -61,13 +88,27 @@ class PokemonListViewModel: PokemonListViewModelImpl {
 
 extension PokemonListViewModel: PokemonListViewModelInput {
   func onFetchCompletd(_ result: Array<Pokemon>) {
-    self.sections += result.compactMap({ pokemon in
-      PokemonListItemViewModel(pokemon: pokemon)
-    })
-    self.isFetchInProgress = false
+    DispatchQueue.main.async {
+      self.sections += result.compactMap({ pokemon in
+        let viewModel = PokemonListItemViewModel(pokemon: pokemon)
+        if let _ = self.capturePokemon.first(where: { $0.name == viewModel.name }) {
+          viewModel.isCapture = true
+        }
+        return viewModel
+      })
+      self.isFetching = false
+    }
   }
   
   func onFetchFailed(_ result: Error) {
-    self.isFetchInProgress = false
+    DispatchQueue.main.async {
+      self.isFetching = false
+    }
+  }
+}
+
+extension PokemonListViewModel: PokemonPersistenceServiceDelegate {
+  func onDataChanged(_ change: Array<RLM_Pokemon>) {
+    self.capturePokemon = change.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
   }
 }

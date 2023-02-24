@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		658132A5B3377CC65AE67D45 /* Pods_MyPokemon_MyPokemonUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41CE5196B008EA2835B660C /* Pods_MyPokemon_MyPokemonUITests.framework */; };
+		7BD7A02329A8855500F65629 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7A02229A8855500F65629 /* PersistenceManager.swift */; };
+		7BD7A02729A8863B00F65629 /* PokemonPersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7A02629A8863B00F65629 /* PokemonPersistenceService.swift */; };
 		7BDC88D329A712A700EC29CC /* PokemonDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC88D229A712A700EC29CC /* PokemonDetail.swift */; };
 		7BDC88D529A714EA00EC29CC /* PokemonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC88D429A714EA00EC29CC /* PokemonDetailView.swift */; };
 		8C363885745C8D1C9CC3ACD9 /* Pods_MyPokemon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF790D5D3CAC03B9FBC4CAD /* Pods_MyPokemon.framework */; };
@@ -71,6 +73,8 @@
 		0315B8FD40965056F08777DD /* Pods-MyPokemonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyPokemonTests.debug.xcconfig"; path = "Target Support Files/Pods-MyPokemonTests/Pods-MyPokemonTests.debug.xcconfig"; sourceTree = "<group>"; };
 		258449B814E0BF20CF71937E /* Pods-MyPokemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyPokemon.debug.xcconfig"; path = "Target Support Files/Pods-MyPokemon/Pods-MyPokemon.debug.xcconfig"; sourceTree = "<group>"; };
 		4A7DC1BA0A563ED82A045792 /* Pods-MyPokemon-MyPokemonUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyPokemon-MyPokemonUITests.debug.xcconfig"; path = "Target Support Files/Pods-MyPokemon-MyPokemonUITests/Pods-MyPokemon-MyPokemonUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		7BD7A02229A8855500F65629 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		7BD7A02629A8863B00F65629 /* PokemonPersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonPersistenceService.swift; sourceTree = "<group>"; };
 		7BDC88D229A712A700EC29CC /* PokemonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetail.swift; sourceTree = "<group>"; };
 		7BDC88D429A714EA00EC29CC /* PokemonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailView.swift; sourceTree = "<group>"; };
 		8EF790D5D3CAC03B9FBC4CAD /* Pods_MyPokemon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyPokemon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +153,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7B29185529A891AC00D20E4D /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				B6D3CC1E29A7D01500EDAEB0 /* PersistenceManager.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		AAA625D80D45520E28672570 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +202,7 @@
 				B6A2EA9D29A63B4A00C48EAF /* Products */,
 				AAA625D80D45520E28672570 /* Pods */,
 				B3EA8264C667AEC6DA789CAE /* Frameworks */,
+				7B29185529A891AC00D20E4D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -410,6 +423,8 @@
 			isa = PBXGroup;
 			children = (
 				B6D3CC1529A7A5FD00EDAEB0 /* Model */,
+				7BD7A02229A8855500F65629 /* PersistenceManager.swift */,
+				7BD7A02629A8863B00F65629 /* PokemonPersistenceService.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -671,6 +686,7 @@
 				B6A2EAAA29A63B4A00C48EAF /* MyPokemon.xcdatamodeld in Sources */,
 				B6A2EAFC29A68B8E00C48EAF /* Pokemon.swift in Sources */,
 				7BDC88D329A712A700EC29CC /* PokemonDetail.swift in Sources */,
+				7BD7A02329A8855500F65629 /* PersistenceManager.swift in Sources */,
 				B645326029A79B51003086CE /* UICollectionViewCell+Extensions.swift in Sources */,
 				B6A2EAE429A67EA900C48EAF /* Coordinator.swift in Sources */,
 				B6A2EAEA29A6804400C48EAF /* PokemonListViewController.swift in Sources */,
@@ -681,6 +697,7 @@
 				B6A2EB0A29A6F7DE00C48EAF /* PokemonListItemViewModel.swift in Sources */,
 				B6A2EAF029A6809C00C48EAF /* PokemonListCoordinator.swift in Sources */,
 				B6A2EB0F29A6FB6C00C48EAF /* NetworkRequestNotify.swift in Sources */,
+				7BD7A02729A8863B00F65629 /* PokemonPersistenceService.swift in Sources */,
 				B6A2EAEC29A6806500C48EAF /* PokemonDetailViewController.swift in Sources */,
 				B645325D29A79A99003086CE /* IndicatorCell.swift in Sources */,
 				B6A2EAFA29A686D100C48EAF /* HttpMethod.swift in Sources */,
@@ -870,7 +887,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T95JM7W2ZM;
+				DEVELOPMENT_TEAM = 83AH7T8DV5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyPokemon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -883,7 +900,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = hanlin.MyPokemon;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanlin.MyPokemon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -899,7 +916,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T95JM7W2ZM;
+				DEVELOPMENT_TEAM = 83AH7T8DV5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyPokemon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -912,7 +929,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = hanlin.MyPokemon;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanlin.MyPokemon;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

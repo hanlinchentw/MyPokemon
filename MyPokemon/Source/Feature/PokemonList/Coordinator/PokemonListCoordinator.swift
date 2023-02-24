@@ -18,12 +18,14 @@ class PokemonListCoodinator: Coordinator {
   
   func start() {
     let apiService = PokemonListService()
-    let viewModel = PokemonListViewModel(apiService: apiService)
+    let persistenceService = PokemonPersistenceService()
+    let viewModel = PokemonListViewModel(apiService: apiService, persistenceService: persistenceService)
     let pokemonListVC = PokemonListViewController()
-    
+
     pokemonListVC.viewModel = viewModel
     pokemonListVC.coordinator = self
     apiService.delegate = viewModel
+    persistenceService.delegate = viewModel
     viewModel.delegate = pokemonListVC
     
     navigationController.setViewControllers([pokemonListVC], animated: false)

@@ -25,10 +25,10 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
   var limit = 20
 
   func loadMore() {
-    let request = GetPokemonRequest()
+    let request = GetPokemonRequest(offset: offset)
     NetworkingManager.shared.request(type: Response.self, request) { [weak self] result in
       self?.onHandleFetchResult(result)
-      self?.offset += 1
+      self?.offset += 20
     }
   }
   

@@ -11,7 +11,7 @@ protocol HttpRequest {
   var host: String { get }
   var path: String { get }
   var method: HttpMethod { get }
-  var queryItem: [String:String]? { get }
+  var queryItems: [String:String]? { get }
 }
 
 extension HttpRequest {

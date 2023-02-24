@@ -26,7 +26,7 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
 
   func loadMore() {
     let request = GetPokemonRequest(offset: offset)
-    NetworkingManager.shared.request(type: Response.self, request) { [weak self] result in
+    NetworkingManager.shared.request(type: Response.self, request.url, request.method, useCache: true) { [weak self] result in
       self?.onHandleFetchResult(result)
       self?.offset += 20
     }

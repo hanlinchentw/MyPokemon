@@ -8,24 +8,34 @@
 import Foundation
 
 protocol NetworkingManagerImpl {
-  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, completion: @escaping(Result<T, Error>) -> Void)
-  func request<T: Codable>(type: T.Type, _ request: HttpRequest, completion: @escaping(Result<T, Error>) -> Void)
+  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, useCache: Bool, completion: @escaping(Result<T, Error>) -> Void)
 }
 
 final class NetworkingManager: NetworkingManagerImpl {
   
   static let shared = NetworkingManager()
   
-  private init() {}
-  
-  func request<T: Codable>(type: T.Type,_ request: HttpRequest, completion: @escaping(Result<T, Error>) -> Void) {
-    guard let url = request.url else {
+  private init() {
+    URLCache.shared.diskCapacity = 50 * 1024 * 1024 // 50 MB
+    URLCache.shared.memoryCapacity = 10 * 1024 * 1024 // 10 MB
+  }
+
+  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, useCache: Bool = true, completion: @escaping(Result<T, Error>) -> Void) {
+    guard let url = url else {
       completion(.failure(NetworkingError.invalidUrl))
       return
     }
     
-    let request = buildRequest(from: url, methodType: request.method)
-
+    let request = buildRequest(from: url, methodType: method)
+    
+    if useCache, let cacheData = URLCache.shared.cachedResponse(for: request) {
+      guard let res: T = try? self.decodeResponse(cacheData.data) else {
+        completion(.failure(NetworkingError.failedToDecode))
+        return
+      }
+      completion(.success(res))
+    }
+    
     let task = URLSession.shared.dataTask(with: request) { data, response, error in
       guard let response = response as? HTTPURLResponse else {
         completion(.failure(NetworkingError.invalidResponse))
@@ -40,9 +50,13 @@ final class NetworkingManager: NetworkingManagerImpl {
         return
       }
       
-      let decoder = JSONDecoder()
-      decoder.keyDecodingStrategy = .convertFromSnakeCase
-      guard let res = try? decoder.decode(T.self, from: data) else {
+      if useCache {
+        let expirationDate = Date(timeIntervalSinceNow: 60 * 60 * 24) // 1 day
+        let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: ["ExpirationDate": expirationDate.timeIntervalSince1970], storagePolicy: .allowed)
+        URLCache.shared.storeCachedResponse(cachedResponse, for: request)
+      }
+
+      guard let res: T = try? self.decodeResponse(data) else {
         completion(.failure(NetworkingError.failedToDecode))
         return
       }
@@ -51,36 +65,10 @@ final class NetworkingManager: NetworkingManagerImpl {
     task.resume()
   }
   
-  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, completion: @escaping(Result<T, Error>) -> Void) {
-    guard let url = url else {
-      completion(.failure(NetworkingError.invalidUrl))
-      return
-    }
-    
-    let request = buildRequest(from: url, methodType: method)
-
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-      guard let response = response as? HTTPURLResponse else {
-        completion(.failure(NetworkingError.invalidResponse))
-        return
-      }
-      guard (200...300) ~= response.statusCode else {
-        completion(.failure(NetworkingError.invalidStatusCode(statusCode: response.statusCode)))
-        return
-      }
-      guard let data = data else {
-        completion(.failure(NetworkingError.invalidData))
-        return
-      }
-      
-      let decoder = JSONDecoder()
-      guard let res = try? decoder.decode(T.self, from: data) else {
-        completion(.failure(NetworkingError.failedToDecode))
-        return
-      }
-      completion(.success(res))
-    }
-    task.resume()
+  func decodeResponse<T: Decodable>(_ data: Data) throws -> T {
+    let decoder = JSONDecoder()
+    let res = try decoder.decode(T.self, from: data)
+    return res
   }
 }
 

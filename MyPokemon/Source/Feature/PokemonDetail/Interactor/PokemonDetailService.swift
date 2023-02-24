@@ -24,7 +24,7 @@ class PokemonDetailService: PokemonDetailServiceImpl, NetworkRequestNotify {
   
   func load(_ urlString: String) {
     let url = URL(string: urlString)
-    NetworkingManager.shared.request(type: Response.self, url, .GET) { [weak self] result in
+    NetworkingManager.shared.request(type: Response.self, url, .GET, useCache: true) { [weak self] result in
       self?.onHandleFetchResult(result)
     }
   }

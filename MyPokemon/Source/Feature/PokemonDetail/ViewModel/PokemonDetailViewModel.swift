@@ -32,7 +32,7 @@ class PokemonDetailViewModel: PokemonDetailViewModelImpl {
   }
   
   func fetch() {
-    apiService.load(pokemon.url)
+    apiService.load(pokemon.detailUrl)
   }
 }
 

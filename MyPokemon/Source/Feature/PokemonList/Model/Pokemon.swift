@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Pokemon: Codable {
+struct Pokemon {
+  var id = UUID().uuidString
   var name: String
-  var url: String
+  var detailUrl: String
 }

@@ -9,13 +9,14 @@ import Foundation
 import RealmSwift
 
 class RLM_Pokemon: Object {
-  @Persisted(primaryKey: true) var id: Int
+  @Persisted(primaryKey: true) var id: String
   @Persisted var name: String
-  @Persisted var imageUrl: String?
+  @Persisted var detailUrl: String
   
-  convenience init(name: String, imageUrl: String? = nil) {
-      self.init()
-      self.name = name
-      self.imageUrl = imageUrl
+  convenience init(id: String, name: String, detailUrl: String) {
+    self.init()
+    self.id = id
+    self.name = name
+    self.detailUrl = detailUrl
   }
 }

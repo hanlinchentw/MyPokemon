@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkingManagerImpl {
-  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, useCache: Bool, completion: @escaping(Result<T, Error>) -> Void)
+  func request<T: Codable>(type: T.Type, session: URLSession, _ url: URL?, _ method: HttpMethod, useCache: Bool, completion: @escaping(Result<T, Error>) -> Void)
 }
 
 final class NetworkingManager: NetworkingManagerImpl {
@@ -20,7 +20,7 @@ final class NetworkingManager: NetworkingManagerImpl {
     URLCache.shared.memoryCapacity = 10 * 1024 * 1024 // 10 MB
   }
 
-  func request<T: Codable>(type: T.Type, _ url: URL?, _ method: HttpMethod, useCache: Bool = true, completion: @escaping(Result<T, Error>) -> Void) {
+  func request<T: Codable>(type: T.Type, session: URLSession = .shared, _ url: URL?, _ method: HttpMethod, useCache: Bool = true, completion: @escaping(Result<T, Error>) -> Void) {
     guard let url = url else {
       completion(.failure(NetworkingError.invalidUrl))
       return
@@ -34,9 +34,10 @@ final class NetworkingManager: NetworkingManagerImpl {
         return
       }
       completion(.success(res))
+      return
     }
     
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+    let task = session.dataTask(with: request) { data, response, error in
       guard let response = response as? HTTPURLResponse else {
         completion(.failure(NetworkingError.invalidResponse))
         return
@@ -72,16 +73,6 @@ final class NetworkingManager: NetworkingManagerImpl {
   }
 }
 
-extension NetworkingManager {
-  enum NetworkingError: LocalizedError {
-    case invalidUrl
-    case custom(error: Error)
-    case invalidStatusCode(statusCode: Int)
-    case invalidResponse
-    case invalidData
-    case failedToDecode
-  }
-}
 
 private extension NetworkingManager {
   func buildRequest(from url: URL, methodType: HttpMethod) -> URLRequest {

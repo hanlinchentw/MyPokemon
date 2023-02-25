@@ -44,11 +44,13 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
 }
 
 extension PokemonListService {
-  struct PokemonResponse: Codable {
+  struct PokemonResponse: Codable, Equatable {
+    var count: Int
+    var next: String?
     var results: Array<PokemonResult>
   }
   
-  struct PokemonResult: Codable {
+  struct PokemonResult: Codable, Equatable {
     var name: String
     var url: String
   }

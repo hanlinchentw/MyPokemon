@@ -16,7 +16,7 @@ class PokemonListServiceSuccessMock: PokemonListServiceImpl {
     
     var pokemonArray: [Pokemon] = []
     
-    for i in 1...20 {
+    for i in 1...pokemonNames.count {
       let randomIndex = Int.random(in: 0..<pokemonNames.count)
       let name = pokemonNames[randomIndex]
       let detailUrl = "https://pokeapi.co/api/v2/pokemon/\(i)"

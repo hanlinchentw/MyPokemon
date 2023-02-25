@@ -8,12 +8,5 @@
 import Foundation
 @testable import MyPokemon
 
-class PokemonPersistenceServiceSuccessMock: PokemonPersistenceServiceImpl {
-  func capture(_ pokemon: MyPokemon.Pokemon) {
-    
-  }
-  
-  func release(_ name: String) throws {
-    
-  }
+class PokemonPersistenceServiceSuccessMock: PokemonPersistenceService {
 }

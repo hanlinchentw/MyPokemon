@@ -51,6 +51,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
   
   private func refreshList() {
+    if sections.isEmpty { return }
     for index in 0 ..< sections.count {
       let section = sections[index]
       if let _ = capturedPokemon.first { $0.name == section.name } {

@@ -221,6 +221,14 @@
 			path = Mock;
 			sourceTree = "<group>";
 		};
+		B6059C0129A9CB13007DCB51 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				B6D3CC2B29A9AF9E00EDAEB0 /* PokemonStaticData.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 		B645325E29A79B3F003086CE /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,7 +293,6 @@
 		B6A2EAD229A63D0C00C48EAF /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B6D3CC2B29A9AF9E00EDAEB0 /* PokemonStaticData.json */,
 				B6D3CC0B29A7A38F00EDAEB0 /* UI */,
 				B645325E29A79B3F003086CE /* Extension */,
 				B6A2EAE529A6800300C48EAF /* Feature */,
@@ -297,6 +304,7 @@
 				B6A2EAA329A63B4A00C48EAF /* ViewController.swift */,
 				B6A2EB0329A6F1F900C48EAF /* Constants.swift */,
 				B6A2EAA529A63B4A00C48EAF /* Main.storyboard */,
+				B6059C0129A9CB13007DCB51 /* JSON */,
 			);
 			path = Source;
 			sourceTree = "<group>";

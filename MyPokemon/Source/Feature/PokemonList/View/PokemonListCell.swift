@@ -93,10 +93,11 @@ class PokemonListCell: UICollectionViewCell {
     }
     self.titleLabel.text = vm.name.capitalized
     
+    captureButton.imageView?.contentMode = .scaleAspectFit
     if vm.isCapture {
-      captureButton.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+      captureButton.setImage(UIImage(named: "icon_pokemon_ball_fill"), for: .normal)
     } else {
-      captureButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+      captureButton.setImage(UIImage(named: "icon_pokemon_ball_default"), for: .normal)
     }
   }
   

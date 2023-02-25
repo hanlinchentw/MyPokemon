@@ -141,22 +141,24 @@ extension PokemonListViewController {
 
 extension PokemonListViewController {
   func setupPocketBtn() {
+    
     let button = UIButton(type: .custom)
-    button.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+    button.setImage(UIImage(named: "icon_back_bag"), for: .normal)
+    
     button.tintColor = .systemRed
     button.backgroundColor = .white
     button.layer.cornerRadius = 30
     button.translatesAutoresizingMaskIntoConstraints = false
     button.addTarget(self, action: #selector(handleButtonTap(_:)), for: .touchUpInside)
     button.addShadow()
-
+    
     self.view.addSubview(button)
-
+    
     NSLayoutConstraint.activate([
-        button.widthAnchor.constraint(equalToConstant: 60),
-        button.heightAnchor.constraint(equalToConstant: 60),
-        button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-        button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+      button.widthAnchor.constraint(equalToConstant: 60),
+      button.heightAnchor.constraint(equalToConstant: 60),
+      button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+      button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
     ])
   }
   

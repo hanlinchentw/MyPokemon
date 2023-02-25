@@ -45,9 +45,9 @@ final class PokemonListServiceSuccessTests: XCTestCase, PokemonListServiceSucces
 }
 
 extension PokemonListServiceSuccessTests: PokemonListServiceDelegate {
-  func onFetchCompletd(_ results: Array<Pokemon>, hasReachEnd: Bool) {
+  func onFetchCompletd(_ results: Array<Pokemon>, hasReachedEnd: Bool) {
     self.results += results
-    self.hasReachEnd = hasReachEnd
+    self.hasReachEnd = hasReachedEnd
     self.expectation?.fulfill()
     self.expectation = nil
   }

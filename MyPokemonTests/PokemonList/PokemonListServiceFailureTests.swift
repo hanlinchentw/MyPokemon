@@ -49,7 +49,7 @@ final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailur
 }
 
 extension PokemonListServiceFailureTests: PokemonListServiceDelegate {
-  func onFetchCompletd(_ results: Array<Pokemon>, hasReachEnd: Bool) {
+  func onFetchCompletd(_ results: Array<Pokemon>, hasReachedEnd: Bool) {
     XCTFail("This is test case should be failed.")
   }
   

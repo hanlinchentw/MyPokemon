@@ -12,7 +12,7 @@ protocol PokemonListServiceImpl {
 }
 
 protocol PokemonListServiceDelegate: AnyObject {
-  func onFetchCompletd(_ result: Array<Pokemon>, hasReachEnd: Bool)
+  func onFetchCompletd(_ result: Array<Pokemon>, hasReachedEnd: Bool)
   func onFetchFailed(_ error: Error)
 }
 
@@ -42,7 +42,7 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
       let result = success.results.map { Pokemon(name: $0.name.capitalized, detailUrl: $0.url) }
       self.nextUrl = success.next
       let hasReachEnd = self.nextUrl == nil
-      delegate?.onFetchCompletd(result, hasReachEnd: hasReachEnd)
+      delegate?.onFetchCompletd(result, hasReachedEnd: hasReachEnd)
     case .failure(let failure):
       delegate?.onFetchFailed(failure)
     }

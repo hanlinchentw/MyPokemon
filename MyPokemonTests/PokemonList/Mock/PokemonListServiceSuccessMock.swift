@@ -24,6 +24,6 @@ class PokemonListServiceSuccessMock: PokemonListServiceImpl {
       pokemonArray.append(pokemon)
     }
     
-    delegate?.onFetchCompletd(pokemonArray, hasReachEnd: false)
+    delegate?.onFetchCompletd(pokemonArray, hasReachedEnd: false)
   }
 }

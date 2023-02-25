@@ -15,7 +15,7 @@ enum PokemonListFetchState: String, Equatable {
 }
 
 protocol PokemonListViewModelImpl {
-  var fetchState: PokemonListFetchState? { get set }
+  var fetchingState: PokemonListFetchState? { get set }
   func fetchList()
 }
 
@@ -33,7 +33,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   
   private var sections: [PokemonListItemViewModel] = [] { didSet { self.delegate?.refresh() } }
   
-  var fetchState: PokemonListFetchState? { didSet { delegate?.updateFetchState() } }
+  var fetchingState: PokemonListFetchState? { didSet { delegate?.updateFetchState() } }
   
   private var capturedPokemon: Array<Pokemon> = [] { didSet { refreshList() } }
   
@@ -43,10 +43,10 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
   
   func fetchList() {
-    guard fetchState != PokemonListFetchState.isFetching || fetchState != PokemonListFetchState.hasReachedEnd else {
+    guard fetchingState != PokemonListFetchState.isFetching || fetchingState != PokemonListFetchState.hasReachedEnd else {
       return
     }
-    fetchState = PokemonListFetchState.isFetching
+    fetchingState = PokemonListFetchState.isFetching
     apiService.loadMore()
   }
   
@@ -66,6 +66,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   
   func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
     if isCapture {
+      // TODO: 可以針對釋放不存在的 Pokemon 顯示錯誤訊息
       try? persistenceService.release(pokemon.name)
     } else {
       persistenceService.capture(pokemon)
@@ -86,12 +87,12 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
   
   func cellShouldLoading(for indexPath: IndexPath) -> Bool {
-    fetchState != PokemonListFetchState.hasReachedEnd && indexPath.row + 1 >= numberOfRows(in: indexPath.section)
+    fetchingState != PokemonListFetchState.hasReachedEnd && indexPath.row + 1 >= numberOfRows(in: indexPath.section)
   }
 }
 
 extension PokemonListViewModel: PokemonListServiceDelegate {
-  func onFetchCompletd(_ result: Array<Pokemon>, hasReachEnd: Bool) {
+  func onFetchCompletd(_ result: Array<Pokemon>, hasReachedEnd: Bool) {
     DispatchQueue.main.async {
       self.sections += result.compactMap({ pokemon in
         let viewModel = PokemonListItemViewModel(pokemon: pokemon)
@@ -100,13 +101,13 @@ extension PokemonListViewModel: PokemonListServiceDelegate {
         }
         return viewModel
       })
-      self.fetchState = hasReachEnd ? PokemonListFetchState.hasReachedEnd : nil
+      self.fetchingState = hasReachedEnd ? PokemonListFetchState.hasReachedEnd : nil
     }
   }
   
   func onFetchFailed(_ error: Error) {
     DispatchQueue.main.async {
-      self.fetchState = PokemonListFetchState.apiError
+      self.fetchingState = PokemonListFetchState.apiError
     }
   }
 }

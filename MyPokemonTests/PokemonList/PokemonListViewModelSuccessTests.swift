@@ -42,9 +42,9 @@ class PokemonListViewModelSuccessTests: XCTestCase, PokemonListViewModelSuccessT
   func test_with_successful_response_and_update_results_result_should_be_20() {
     expectation = expectation(description: "Fetch list done")
     viewModel.fetchList()
-    XCTAssertEqual(viewModel.fetchState, PokemonListFetchState.isFetching)
+    XCTAssertEqual(viewModel.fetchingState, PokemonListFetchState.isFetching)
     waitForExpectations(timeout: 2)
-    XCTAssertNil(viewModel.fetchState, "Fetching state should be nil")
+    XCTAssertNil(viewModel.fetchingState, "Fetching state should be nil")
     XCTAssertEqual(viewModel.numberOfSection, 1)
     XCTAssertEqual(viewModel.numberOfRows(in: 0), 20)
   }
@@ -52,17 +52,17 @@ class PokemonListViewModelSuccessTests: XCTestCase, PokemonListViewModelSuccessT
   func test_with_successful_response_and_update_results_twice_result_should_be_40() {
     expectation = expectation(description: "Fetch list first time done")
     viewModel.fetchList()
-    XCTAssertEqual(viewModel.fetchState, PokemonListFetchState.isFetching)
+    XCTAssertEqual(viewModel.fetchingState, PokemonListFetchState.isFetching)
     waitForExpectations(timeout: 2)
-    XCTAssertNil(viewModel.fetchState, "Fetching state should be nil")
+    XCTAssertNil(viewModel.fetchingState, "Fetching state should be nil")
     XCTAssertEqual(viewModel.numberOfSection, 1)
     XCTAssertEqual(viewModel.numberOfRows(in: 0), 20)
     
     expectation = expectation(description: "Fetch list second time done")
     viewModel.fetchList()
-    XCTAssertEqual(viewModel.fetchState, PokemonListFetchState.isFetching)
+    XCTAssertEqual(viewModel.fetchingState, PokemonListFetchState.isFetching)
     waitForExpectations(timeout: 2)
-    XCTAssertNil(viewModel.fetchState, "Fetching state should be nil")
+    XCTAssertNil(viewModel.fetchingState, "Fetching state should be nil")
     XCTAssertEqual(viewModel.numberOfSection, 1)
     XCTAssertEqual(viewModel.numberOfRows(in: 0), 40)
   }

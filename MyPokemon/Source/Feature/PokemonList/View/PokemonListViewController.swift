@@ -41,9 +41,9 @@ class PokemonListViewController: UIViewController {
 extension PokemonListViewController: PokemonListViewModelDelegate {
   func updateFetchState() {
     let label = UILabel()
-    label.text = viewModel.fetchState?.rawValue
+    label.text = viewModel.fetchingState?.rawValue
     label.font = UIFont.systemFont(ofSize: 17.0)
-    label.textColor = viewModel.fetchState == PokemonListFetchState.apiError ? .red : .white
+    label.textColor = viewModel.fetchingState == PokemonListFetchState.apiError ? .red : .white
     let barButton = UIBarButtonItem(customView: label)
     navigationItem.rightBarButtonItem = barButton
   }

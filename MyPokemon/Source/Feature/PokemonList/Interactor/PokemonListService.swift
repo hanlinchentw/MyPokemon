@@ -11,7 +11,7 @@ protocol PokemonListServiceImpl {
   func loadMore()
 }
 
-protocol PokemonListViewModelInput: AnyObject {
+protocol PokemonListServiceDelegate: AnyObject {
   func onFetchCompletd(_ result: Array<Pokemon>, hasReachEnd: Bool)
   func onFetchFailed(_ error: Error)
 }
@@ -21,7 +21,7 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
   
   private let networkingManager: NetworkingManagerImpl
   
-  weak var delegate: (any PokemonListViewModelInput)?
+  weak var delegate: (any PokemonListServiceDelegate)?
   
   var nextUrl: String?
 

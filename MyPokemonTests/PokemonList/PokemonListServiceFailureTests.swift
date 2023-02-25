@@ -43,7 +43,7 @@ final class PokemonListServiceFailureTests: XCTestCase {
     waitForExpectations(timeout: 2)
     
     XCTAssertEqual(listService.offset, 0, "Offset should not be updated because of failure api request")
-    XCTAssertNotNil(results, "After failed to load any data, results should be nil.")
+    XCTAssertNil(results, "After failed to load any data, results should be nil.")
     XCTAssertNotNil(error, "Before loading any data, error should not be nil.")
   }
 }

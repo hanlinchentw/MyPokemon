@@ -35,21 +35,22 @@ final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailur
   
   func test_with_successful_response_and_update_results() {
     expectation = expectation(description: "Error Occured!")
-    XCTAssertEqual(listService.offset, 0)
+    
+    XCTAssertNil(listService.nextUrl, "Before loading any data, nextUrl should be nil.")
     XCTAssertNil(results, "Before loading any data, results should be nil.")
     XCTAssertNil(error, "Before loading any data, error should be nil.")
 
     listService.loadMore()
     waitForExpectations(timeout: 2)
     
-    XCTAssertEqual(listService.offset, 0, "Offset should not be updated because of failure api request")
-    XCTAssertNil(results, "After failed to load any data, results should be nil.")
-    XCTAssertNotNil(error, "Before loading any data, error should not be nil.")
+    XCTAssertEqual(listService.nextUrl, "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20", "After faildto load data, nextUrl should be nil.")
+    XCTAssertNil(results, "After failed to load data, results should be nil.")
+    XCTAssertNotNil(error, "After failed to load data, error should not be nil.")
   }
 }
 
 extension PokemonListServiceFailureTests: PokemonListViewModelInput {
-  func onFetchCompletd(_ results: Array<Pokemon>) {
+  func onFetchCompletd(_ results: Array<Pokemon>, hasReachEnd: Bool) {
     XCTFail("This is test case should be failed.")
   }
   

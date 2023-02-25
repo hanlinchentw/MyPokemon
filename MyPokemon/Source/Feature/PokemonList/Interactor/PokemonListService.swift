@@ -12,7 +12,7 @@ protocol PokemonListServiceImpl {
 }
 
 protocol PokemonListViewModelInput: AnyObject {
-  func onFetchCompletd(_ result: Array<Pokemon>)
+  func onFetchCompletd(_ result: Array<Pokemon>, hasReachEnd: Bool)
   func onFetchFailed(_ error: Error)
 }
 
@@ -23,16 +23,15 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
   
   weak var delegate: (any PokemonListViewModelInput)?
   
-  var offset = 0
-  var limit = 20
+  var nextUrl: String?
 
   init(networkingManager: NetworkingManagerImpl = NetworkingManager.shared) {
     self.networkingManager = networkingManager
   }
 
   func loadMore() {
-    let request = GetPokemonRequest(offset: offset)
-    networkingManager.request(type: Response.self, session: URLSession.shared, request.url, request.method, useCache: true) { [weak self] result in
+    let url = nextUrl != nil ? URL(string: self.nextUrl!) : GetPokemonRequest().url
+    networkingManager.request(type: Response.self, session: URLSession.shared, url, .GET, useCache: true) { [weak self] result in
       self?.onHandleFetchResult(result)
     }
   }
@@ -41,8 +40,9 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
     switch result {
     case .success(let success):
       let result = success.results.map { Pokemon(name: $0.name.capitalized, detailUrl: $0.url) }
-      delegate?.onFetchCompletd(result)
-      self.offset += 20
+      self.nextUrl = success.next
+      let hasReachEnd = self.nextUrl == nil
+      delegate?.onFetchCompletd(result, hasReachEnd: hasReachEnd)
     case .failure(let failure):
       delegate?.onFetchFailed(failure)
     }

@@ -19,11 +19,18 @@ protocol PokemonDetailViewInput: AnyObject {
 
 class PokemonDetailViewModel: PokemonDetailViewModelImpl {
   weak var viewInput: (any PokemonDetailViewInput)?
-  let apiService: PokemonDetailServiceImpl
+  private let apiService: PokemonDetailServiceImpl
+  private let persistenceService: PokemonPersistenceServiceImpl
   
   let pokemon: Pokemon
   
   var detail: PokemonDetail? {
+    didSet {
+      viewInput?.update()
+    }
+  }
+  
+  var isCaptured: Bool = false {
     didSet {
       viewInput?.update()
     }
@@ -35,13 +42,23 @@ class PokemonDetailViewModel: PokemonDetailViewModelImpl {
     }
   }
 
-  init(pokemon: Pokemon, apiService: PokemonDetailServiceImpl) {
+  init(pokemon: Pokemon, apiService: PokemonDetailServiceImpl, persietenceService: PokemonPersistenceServiceImpl) {
     self.apiService = apiService
+    self.persistenceService = persietenceService
     self.pokemon = pokemon
   }
   
   func fetch() {
     apiService.load(pokemon.detailUrl)
+  }
+  
+  func didTapBtn() {
+    if isCaptured {
+      // TODO: 可以針對釋放不存在的 Pokemon 顯示錯誤訊息
+      try? persistenceService.release(pokemon.name)
+    } else {
+      persistenceService.capture(pokemon)
+    }
   }
 }
 
@@ -54,5 +71,15 @@ extension PokemonDetailViewModel: PokemonDetailViewModelInput {
   
   func onFetchFailed(_ error: Error) {
     self.error = error
+  }
+}
+
+extension PokemonDetailViewModel: PokemonPersistenceServiceDelegate {
+  func onDataInit(_ initial: Array<RLM_Pokemon>) {
+    isCaptured = initial.contains(where: { $0.name == pokemon.name })
+  }
+  
+  func onDataChanged(_ change: Array<RLM_Pokemon>) {
+    isCaptured = change.contains(where: { $0.name == pokemon.name })
   }
 }

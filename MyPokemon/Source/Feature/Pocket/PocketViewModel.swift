@@ -34,11 +34,15 @@ class PocketViewModel: PocketViewModelImpl {
   
   func release(_ indexPath: IndexPath) {
     let pokemon = data[indexPath.row]
-    persistenceService.release(pokemon.name)
+    try? persistenceService.release(pokemon.name)
   }
 }
 
 extension PocketViewModel: PokemonPersistenceServiceDelegate {
+  func onDataInit(_ initial: Array<RLM_Pokemon>) {
+    self.data = initial
+  }
+
   func onDataChanged(_ change: Array<RLM_Pokemon>) {
     self.data = change
   }

@@ -55,7 +55,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   
   func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
     if isCapture {
-      persistenceService.release(pokemon.name)
+      try? persistenceService.release(pokemon.name)
     } else {
       persistenceService.capture(pokemon)
     }
@@ -108,6 +108,10 @@ extension PokemonListViewModel: PokemonListViewModelInput {
 }
 
 extension PokemonListViewModel: PokemonPersistenceServiceDelegate {
+  func onDataInit(_ initial: Array<RLM_Pokemon>) {
+    self.capturePokemon = initial.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
+  }
+  
   func onDataChanged(_ change: Array<RLM_Pokemon>) {
     self.capturePokemon = change.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
   }

@@ -17,7 +17,7 @@ protocol HttpRequest {
 extension HttpRequest {
   var queryItems: [String:String]? { nil }
   
-  var url: URL? {
+  var urlComponents: URLComponents {
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"
     urlComponents.host = host
@@ -30,7 +30,10 @@ extension HttpRequest {
     }
     
     urlComponents.queryItems = requestQueryItems
-    
-    return urlComponents.url
+    return urlComponents
+  }
+  
+  var url: URL? {
+    urlComponents.url
   }
 }

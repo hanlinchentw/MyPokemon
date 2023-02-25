@@ -29,10 +29,6 @@ extension HttpRequest {
       requestQueryItems.append(URLQueryItem(name: item.key, value: item.value))
     }
     
-#if DEBUG
-    requestQueryItems.append(URLQueryItem(name: "delay", value: "2"))
-#endif
-    
     urlComponents.queryItems = requestQueryItems
     
     return urlComponents.url

@@ -44,7 +44,7 @@ final class PokemonListServiceSuccessTests: XCTestCase, PokemonListServiceSucces
   }
 }
 
-extension PokemonListServiceSuccessTests: PokemonListViewModelInput {
+extension PokemonListServiceSuccessTests: PokemonListServiceDelegate {
   func onFetchCompletd(_ results: Array<Pokemon>, hasReachEnd: Bool) {
     self.results += results
     self.hasReachEnd = hasReachEnd

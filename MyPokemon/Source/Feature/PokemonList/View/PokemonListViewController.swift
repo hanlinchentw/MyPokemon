@@ -37,7 +37,17 @@ class PokemonListViewController: UIViewController {
     setupNavigationController()
   }
 }
-extension PokemonListViewController: PokemonListViewModelDelegate {  
+
+extension PokemonListViewController: PokemonListViewModelDelegate {
+  func updateFetchState() {
+    let label = UILabel()
+    label.text = viewModel.fetchState?.rawValue
+    label.font = UIFont.systemFont(ofSize: 17.0)
+    label.textColor = viewModel.fetchState == PokemonListFetchState.apiError ? .red : .white
+    let barButton = UIBarButtonItem(customView: label)
+    navigationItem.rightBarButtonItem = barButton
+  }
+  
   func refresh() {
     collectionView.reloadData()
   }
@@ -49,7 +59,7 @@ extension PokemonListViewController: UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    if cellShouldLoading(for: indexPath) {
+    if viewModel.cellShouldLoading(for: indexPath) {
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IndicatorCell.reuseIdentifier, for: indexPath) as! IndicatorCell
       cell.start()
       return cell
@@ -69,11 +79,8 @@ extension PokemonListViewController: UICollectionViewDelegate {
 }
 
 extension PokemonListViewController: UICollectionViewDataSourcePrefetching {
-  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
-    indexPath.row + 1 >= viewModel.numberOfRows(in: indexPath.section)
-  }
   func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-    if indexPaths.contains(where: cellShouldLoading) {
+    if indexPaths.contains(where: viewModel.cellShouldLoading) {
       viewModel.fetchList()
     }
   }
@@ -141,7 +148,6 @@ extension PokemonListViewController {
 
 extension PokemonListViewController {
   func setupPocketBtn() {
-    
     let button = UIButton(type: .custom)
     button.setImage(UIImage(named: "icon_back_bag"), for: .normal)
     

@@ -8,16 +8,29 @@
 import Foundation
 import RealmSwift
 
+enum PokemonListFetchState: String, Equatable {
+  case isFetching = "Loading..."
+  case hasReachedEnd = "The end"
+  case apiError = "Network error"
+}
+
 protocol PokemonListViewModelImpl {
+  var fetchState: PokemonListFetchState? { get set }
   func fetchList()
 }
 
 protocol PokemonListViewModelDelegate: AnyObject {
   func refresh()
+  func updateFetchState()
 }
 
 class PokemonListViewModel: PokemonListViewModelImpl {
-  var isFetching = false
+  
+  var fetchState: PokemonListFetchState? {
+    didSet {
+      delegate?.updateFetchState()
+    }
+  }
   
   let apiService: PokemonListServiceImpl
   let persistenceService: PokemonPersistenceServiceImpl
@@ -46,11 +59,15 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
   
   func fetchList() {
-    guard !isFetching else {
+    guard fetchState != PokemonListFetchState.isFetching || fetchState != PokemonListFetchState.hasReachedEnd else {
       return
     }
-    isFetching = true
+    fetchState = PokemonListFetchState.isFetching
     apiService.loadMore()
+  }
+  
+  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
+    fetchState != PokemonListFetchState.hasReachedEnd && indexPath.row + 1 >= numberOfRows(in: indexPath.section)
   }
   
   func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
@@ -86,8 +103,8 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   }
 }
 
-extension PokemonListViewModel: PokemonListViewModelInput {
-  func onFetchCompletd(_ result: Array<Pokemon>) {
+extension PokemonListViewModel: PokemonListServiceDelegate {
+  func onFetchCompletd(_ result: Array<Pokemon>, hasReachEnd: Bool) {
     DispatchQueue.main.async {
       self.sections += result.compactMap({ pokemon in
         let viewModel = PokemonListItemViewModel(pokemon: pokemon)
@@ -96,13 +113,13 @@ extension PokemonListViewModel: PokemonListViewModelInput {
         }
         return viewModel
       })
-      self.isFetching = false
+      self.fetchState = hasReachEnd ? PokemonListFetchState.hasReachedEnd : nil
     }
   }
   
-  func onFetchFailed(_ result: Error) {
+  func onFetchFailed(_ error: Error) {
     DispatchQueue.main.async {
-      self.isFetching = false
+      self.fetchState = PokemonListFetchState.apiError
     }
   }
 }

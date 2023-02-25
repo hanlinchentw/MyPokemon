@@ -21,10 +21,15 @@ class PokemonDetailService: PokemonDetailServiceImpl, NetworkRequestNotify {
   weak var delegate: (any PokemonDetailViewModelInput)?
   typealias Response = PokemonDetailResponse
   
+  var networkingManager: NetworkingManagerImpl
+  
+  init(networkingManager: NetworkingManagerImpl = NetworkingManager.shared) {
+    self.networkingManager = networkingManager
+  }
   
   func load(_ urlString: String) {
     let url = URL(string: urlString)
-    NetworkingManager.shared.request(type: Response.self, url, .GET, useCache: true) { [weak self] result in
+    networkingManager.request(type: Response.self, session: .shared, url, .GET, useCache: true) { [weak self] result in
       self?.onHandleFetchResult(result)
     }
   }

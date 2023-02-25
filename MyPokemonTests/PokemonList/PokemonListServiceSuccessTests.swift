@@ -21,7 +21,7 @@ final class PokemonListServiceSuccessTests: XCTestCase, PokemonListServiceSucces
   var expectation: XCTestExpectation?
 
   override func setUp() {
-    networkingManagerMock = NetworkingManagerResponseSuccessMock()
+    networkingManagerMock = NetworkingManagerPokemonResponseSuccessMock()
     listService = PokemonListService(networkingManager: networkingManagerMock)
     listService.delegate = self
   }

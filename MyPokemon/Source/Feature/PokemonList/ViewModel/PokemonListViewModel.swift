@@ -26,32 +26,16 @@ protocol PokemonListViewModelDelegate: AnyObject {
 
 class PokemonListViewModel: PokemonListViewModelImpl {
   
-  var fetchState: PokemonListFetchState? {
-    didSet {
-      delegate?.updateFetchState()
-    }
-  }
-  
-  let apiService: PokemonListServiceImpl
-  let persistenceService: PokemonPersistenceServiceImpl
+  private let apiService: PokemonListServiceImpl
+  private let persistenceService: PokemonPersistenceServiceImpl
   
   weak var delegate: PokemonListViewModelDelegate?
   
-  var notificationToken: NotificationToken?
+  private var sections: [PokemonListItemViewModel] = [] { didSet { self.delegate?.refresh() } }
   
-  var sections: [PokemonListItemViewModel] = [] {
-    didSet {
-      DispatchQueue.main.async {
-        self.delegate?.refresh()
-      }
-    }
-  }
+  var fetchState: PokemonListFetchState? { didSet { delegate?.updateFetchState() } }
   
-  var capturePokemon: Array<Pokemon> = [] {
-    didSet {
-      refreshState()
-    }
-  }
+  private var capturedPokemon: Array<Pokemon> = [] { didSet { refreshList() } }
   
   init(apiService: PokemonListServiceImpl = PokemonListService(), persistenceService: PokemonPersistenceServiceImpl = PokemonPersistenceService()) {
     self.apiService = apiService
@@ -66,9 +50,18 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     apiService.loadMore()
   }
   
-  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
-    fetchState != PokemonListFetchState.hasReachedEnd && indexPath.row + 1 >= numberOfRows(in: indexPath.section)
+  private func refreshList() {
+    for index in 0 ..< sections.count {
+      let section = sections[index]
+      if let _ = capturedPokemon.first { $0.name == section.name } {
+        self.sections[index].isCapture = true
+      } else {
+        self.sections[index].isCapture = false
+      }
+    }
+    delegate?.refresh()
   }
+  
   
   func didTapBtn(_ pokemon: Pokemon, _ isCapture: Bool) {
     if isCapture {
@@ -78,18 +71,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     }
   }
   
-  func refreshState() {
-    for index in 0 ..< sections.count {
-      let section = sections[index]
-      if let _ = capturePokemon.first { $0.name == section.name } {
-        self.sections[index].isCapture = true
-      } else {
-        self.sections[index].isCapture = false
-      }
-    }
-    delegate?.refresh()
-  }
-  
+  // CollectionView data source
   var numberOfSection: Int {
     return 1
   }
@@ -101,6 +83,10 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   func cellViewModel(for indexPath: IndexPath) -> PokemonListItemViewModel {
     return sections[indexPath.row]
   }
+  
+  func cellShouldLoading(for indexPath: IndexPath) -> Bool {
+    fetchState != PokemonListFetchState.hasReachedEnd && indexPath.row + 1 >= numberOfRows(in: indexPath.section)
+  }
 }
 
 extension PokemonListViewModel: PokemonListServiceDelegate {
@@ -108,7 +94,7 @@ extension PokemonListViewModel: PokemonListServiceDelegate {
     DispatchQueue.main.async {
       self.sections += result.compactMap({ pokemon in
         let viewModel = PokemonListItemViewModel(pokemon: pokemon)
-        if let _ = self.capturePokemon.first(where: { $0.name == viewModel.name }) {
+        if let _ = self.capturedPokemon.first(where: { $0.name == viewModel.name }) {
           viewModel.isCapture = true
         }
         return viewModel
@@ -126,10 +112,10 @@ extension PokemonListViewModel: PokemonListServiceDelegate {
 
 extension PokemonListViewModel: PokemonPersistenceServiceDelegate {
   func onDataInit(_ initial: Array<RLM_Pokemon>) {
-    self.capturePokemon = initial.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
+    self.capturedPokemon = initial.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
   }
   
   func onDataChanged(_ change: Array<RLM_Pokemon>) {
-    self.capturePokemon = change.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
+    self.capturedPokemon = change.map { Pokemon(name: $0.name, detailUrl: $0.detailUrl) }
   }
 }

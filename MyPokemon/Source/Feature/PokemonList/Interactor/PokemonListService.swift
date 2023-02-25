@@ -8,6 +8,7 @@
 import Foundation
 
 protocol PokemonListServiceImpl {
+  var delegate: PokemonListServiceDelegate? { get set }
   func loadMore()
 }
 

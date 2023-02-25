@@ -38,4 +38,11 @@ extension PokemonDetailViewController: PokemonDetailViewInput {
       self.detailView.pokemonDetail = self.viewModel.detail
     }
   }
+
+  func onError(_ error: Error?) {
+    let alertVC = UIAlertController(title: "Network error", message: "Something went wrong when we want to fetch data remotely ...\n, error=\(error?.localizedDescription)", preferredStyle: .alert)
+    let action = UIAlertAction(title: "OK", style: .cancel)
+    alertVC.addAction(action)
+    self.present(alertVC, animated: true)
+  }
 }

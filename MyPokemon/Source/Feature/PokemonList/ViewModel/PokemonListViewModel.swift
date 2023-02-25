@@ -40,7 +40,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     }
   }
   
-  init(apiService: PokemonListServiceImpl, persistenceService: PokemonPersistenceServiceImpl) {
+  init(apiService: PokemonListServiceImpl = PokemonListService(), persistenceService: PokemonPersistenceServiceImpl = PokemonPersistenceService()) {
     self.apiService = apiService
     self.persistenceService = persistenceService
   }

@@ -19,16 +19,21 @@ protocol PokemonListViewModelInput: AnyObject {
 class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
   typealias Response = PokemonResponse
   
+  private let networkingManager: NetworkingManagerImpl
+  
   weak var delegate: (any PokemonListViewModelInput)?
-
+  
   var offset = 0
   var limit = 20
 
+  init(networkingManager: NetworkingManagerImpl = NetworkingManager.shared) {
+    self.networkingManager = networkingManager
+  }
+
   func loadMore() {
     let request = GetPokemonRequest(offset: offset)
-    NetworkingManager.shared.request(type: Response.self, request.url, request.method, useCache: true) { [weak self] result in
+    networkingManager.request(type: Response.self, session: URLSession.shared, request.url, request.method, useCache: true) { [weak self] result in
       self?.onHandleFetchResult(result)
-      self?.offset += 20
     }
   }
   
@@ -37,6 +42,7 @@ class PokemonListService: PokemonListServiceImpl, NetworkRequestNotify {
     case .success(let success):
       let result = success.results.map { Pokemon(name: $0.name.capitalized, detailUrl: $0.url) }
       delegate?.onFetchCompletd(result)
+      self.offset += 20
     case .failure(let failure):
       delegate?.onFetchFailed(failure)
     }

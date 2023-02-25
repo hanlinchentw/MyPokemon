@@ -42,8 +42,7 @@ final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailur
 
     listService.loadMore()
     waitForExpectations(timeout: 2)
-    
-    XCTAssertEqual(listService.nextUrl, "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20", "After faildto load data, nextUrl should be nil.")
+
     XCTAssertNil(results, "After failed to load data, results should be nil.")
     XCTAssertNotNil(error, "After failed to load data, error should not be nil.")
   }

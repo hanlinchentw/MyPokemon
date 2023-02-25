@@ -10,9 +10,10 @@ import XCTest
 
 protocol PokemonListServiceSuccessTestsSpec {
   func test_with_successful_response_and_update_results()
+  func test_with_successful_response_and_update_result_mulptiple_time()
 }
 
-final class PokemonListServiceSuccessTests: XCTestCase {
+final class PokemonListServiceSuccessTests: XCTestCase, PokemonListServiceSuccessTestsSpec {
   var networkingManagerMock: NetworkingManagerImpl!
   var listService: PokemonListService!
 

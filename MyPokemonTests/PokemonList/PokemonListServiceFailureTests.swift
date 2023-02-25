@@ -9,10 +9,10 @@ import XCTest
 @testable import MyPokemon
 
 protocol PokemonListServiceFailureTestsSpec {
-  func test_with_failed_response()
+  func test_with_successful_response_and_update_results()
 }
 
-final class PokemonListServiceFailureTests: XCTestCase {
+final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailureTestsSpec {
   var networkingManagerMock: NetworkingManagerImpl!
   var listService: PokemonListService!
   

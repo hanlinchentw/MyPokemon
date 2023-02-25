@@ -8,7 +8,14 @@
 import XCTest
 @testable import MyPokemon
 
-class PokemonListViewModelSuccessTests: XCTestCase {
+protocol PokemonListViewModelSuccessTestsSpec {
+  func test_with_successful_response_and_update_results_result_should_be_20()
+  func test_with_successful_response_and_update_results_twice_result_should_be_40()
+  func test_with_successful_response_and_capture_top_3()
+  func test_with_successful_response_capture_and_release_one()
+}
+
+class PokemonListViewModelSuccessTests: XCTestCase, PokemonListViewModelSuccessTestsSpec {
   var apiServiceMock: PokemonListServiceSuccessMock!
   var persistenceServiceMock: PokemonPersistenceServiceSuccessMock!
   

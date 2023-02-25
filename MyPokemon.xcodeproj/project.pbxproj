@@ -13,6 +13,11 @@
 		7BDC88D329A712A700EC29CC /* PokemonDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC88D229A712A700EC29CC /* PokemonDetail.swift */; };
 		7BDC88D529A714EA00EC29CC /* PokemonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC88D429A714EA00EC29CC /* PokemonDetailView.swift */; };
 		8C363885745C8D1C9CC3ACD9 /* Pods_MyPokemon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF790D5D3CAC03B9FBC4CAD /* Pods_MyPokemon.framework */; };
+		B6059BF329A9BE84007DCB51 /* PokemonListServiceSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6059BF229A9BE84007DCB51 /* PokemonListServiceSuccessTests.swift */; };
+		B6059BFA29A9C01B007DCB51 /* PokemonListServiceResponseSuccessMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6059BF929A9C01B007DCB51 /* PokemonListServiceResponseSuccessMock.swift */; };
+		B6059BFC29A9C353007DCB51 /* NetworkingManagerResponseSuccessMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6059BFB29A9C353007DCB51 /* NetworkingManagerResponseSuccessMock.swift */; };
+		B6059BFE29A9C665007DCB51 /* NetworkingManagerResponseFailureMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6059BFD29A9C665007DCB51 /* NetworkingManagerResponseFailureMock.swift */; };
+		B6059C0029A9C6A4007DCB51 /* PokemonListServiceFailureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6059BFF29A9C6A4007DCB51 /* PokemonListServiceFailureTests.swift */; };
 		B645325929A70A7A003086CE /* PokemonDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B645325829A70A7A003086CE /* PokemonDetailViewModel.swift */; };
 		B645325B29A70ABA003086CE /* PokemonDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B645325A29A70ABA003086CE /* PokemonDetailService.swift */; };
 		B645325D29A79A99003086CE /* IndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B645325C29A79A99003086CE /* IndicatorCell.swift */; };
@@ -83,6 +88,11 @@
 		7BDC88D229A712A700EC29CC /* PokemonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetail.swift; sourceTree = "<group>"; };
 		7BDC88D429A714EA00EC29CC /* PokemonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailView.swift; sourceTree = "<group>"; };
 		8EF790D5D3CAC03B9FBC4CAD /* Pods_MyPokemon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyPokemon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6059BF229A9BE84007DCB51 /* PokemonListServiceSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListServiceSuccessTests.swift; sourceTree = "<group>"; };
+		B6059BF929A9C01B007DCB51 /* PokemonListServiceResponseSuccessMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListServiceResponseSuccessMock.swift; sourceTree = "<group>"; };
+		B6059BFB29A9C353007DCB51 /* NetworkingManagerResponseSuccessMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManagerResponseSuccessMock.swift; sourceTree = "<group>"; };
+		B6059BFD29A9C665007DCB51 /* NetworkingManagerResponseFailureMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManagerResponseFailureMock.swift; sourceTree = "<group>"; };
+		B6059BFF29A9C6A4007DCB51 /* PokemonListServiceFailureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListServiceFailureTests.swift; sourceTree = "<group>"; };
 		B645325829A70A7A003086CE /* PokemonDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewModel.swift; sourceTree = "<group>"; };
 		B645325A29A70ABA003086CE /* PokemonDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailService.swift; sourceTree = "<group>"; };
 		B645325C29A79A99003086CE /* IndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorCell.swift; sourceTree = "<group>"; };
@@ -193,6 +203,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B6059BF129A9BE6A007DCB51 /* PokemonList */ = {
+			isa = PBXGroup;
+			children = (
+				B6059BF629A9BFE2007DCB51 /* Mock */,
+				B6059BF229A9BE84007DCB51 /* PokemonListServiceSuccessTests.swift */,
+				B6059BFF29A9C6A4007DCB51 /* PokemonListServiceFailureTests.swift */,
+			);
+			path = PokemonList;
+			sourceTree = "<group>";
+		};
+		B6059BF629A9BFE2007DCB51 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				B6059BF929A9C01B007DCB51 /* PokemonListServiceResponseSuccessMock.swift */,
+				B6059BFB29A9C353007DCB51 /* NetworkingManagerResponseSuccessMock.swift */,
+				B6059BFD29A9C665007DCB51 /* NetworkingManagerResponseFailureMock.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		B645325E29A79B3F003086CE /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +269,7 @@
 		B6A2EAB829A63B4B00C48EAF /* MyPokemonTests */ = {
 			isa = PBXGroup;
 			children = (
+				B6059BF129A9BE6A007DCB51 /* PokemonList */,
 				B6D3CC2029A9A76100EDAEB0 /* Network */,
 				B6A2EAB929A63B4B00C48EAF /* MyPokemonTests.swift */,
 			);
@@ -757,9 +788,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6059BF329A9BE84007DCB51 /* PokemonListServiceSuccessTests.swift in Sources */,
 				B6D3CC2829A9AC9600EDAEB0 /* NetworkManagerTests.swift in Sources */,
+				B6059BFC29A9C353007DCB51 /* NetworkingManagerResponseSuccessMock.swift in Sources */,
+				B6059BFE29A9C665007DCB51 /* NetworkingManagerResponseFailureMock.swift in Sources */,
 				B6A2EABA29A63B4B00C48EAF /* MyPokemonTests.swift in Sources */,
 				B6D3CC2229A9A77300EDAEB0 /* NetworkEndpointTests.swift in Sources */,
+				B6059BFA29A9C01B007DCB51 /* PokemonListServiceResponseSuccessMock.swift in Sources */,
+				B6059C0029A9C6A4007DCB51 /* PokemonListServiceFailureTests.swift in Sources */,
 				B6D3CC2629A9A9ED00EDAEB0 /* MockURLSessionProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

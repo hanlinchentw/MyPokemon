@@ -25,6 +25,7 @@ protocol PokemonListViewModelImpl {
 
 protocol PokemonListViewModelDelegate: AnyObject {
   func refresh()
+  func onPocketChange()
   func updateFetchState()
 }
 
@@ -39,7 +40,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
   
   var fetchingState: PokemonListFetchState? { didSet { delegate?.updateFetchState() } }
   
-  private var capturedPokemon: Array<Pokemon> = [] { didSet { refreshList() } }
+  private var capturedPokemon: Array<Pokemon> = [] { didSet { refreshCapturedState() } }
   
   init(apiService: PokemonListServiceImpl = PokemonListService(), persistenceService: PokemonPersistenceServiceImpl = PokemonPersistenceService()) {
     self.apiService = apiService
@@ -54,7 +55,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
     apiService.loadMore()
   }
   
-  private func refreshList() {
+  private func refreshCapturedState() {
     if sections.isEmpty { return }
     for index in 0 ..< sections.count {
       let section = sections[index]
@@ -64,7 +65,7 @@ class PokemonListViewModel: PokemonListViewModelImpl {
         self.sections[index].isCapture = false
       }
     }
-    delegate?.refresh()
+    delegate?.onPocketChange()
   }
   
   

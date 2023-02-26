@@ -20,6 +20,7 @@ class PokemonListViewController: UIViewController {
     collectionView.prefetchDataSource = self
     return collectionView
   }()
+  let pocketButton = UIButton(type: .custom)
   
   var viewModel: PokemonListViewModel!
   var coordinator: PokemonListCoodinator!
@@ -49,6 +50,21 @@ extension PokemonListViewController: PokemonListViewModelDelegate {
   
   func refresh() {
     collectionView.reloadData()
+  }
+  
+  func onPocketChange() {
+    collectionView.reloadData()
+    let zoomAnimation = CGAffineTransform(scaleX: 1.2, y: 1.2)
+    UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve) {
+      self.pocketButton.transform = zoomAnimation
+    } completion: { (_) in
+      UIView.animate(withDuration: 0.4, delay: 0,
+                     usingSpringWithDamping: 0.5,
+                     initialSpringVelocity: 0.2,
+                     options: .curveEaseOut) {
+        self.pocketButton.transform = zoomAnimation.inverted()
+      }
+    }
   }
 }
 
@@ -144,23 +160,22 @@ extension PokemonListViewController {
 
 extension PokemonListViewController {
   func setupPocketBtn() {
-    let button = UIButton(type: .custom)
-    button.setImage(UIImage(named: "icon_back_bag"), for: .normal)
+    pocketButton.setImage(UIImage(named: "icon_back_bag"), for: .normal)
     
-    button.tintColor = .systemRed
-    button.backgroundColor = .white
-    button.layer.cornerRadius = 30
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.addTarget(self, action: #selector(handleButtonTap(_:)), for: .touchUpInside)
-    button.addShadow()
+    pocketButton.tintColor = .systemRed
+    pocketButton.backgroundColor = .white
+    pocketButton.layer.cornerRadius = 30
+    pocketButton.translatesAutoresizingMaskIntoConstraints = false
+    pocketButton.addTarget(self, action: #selector(handleButtonTap(_:)), for: .touchUpInside)
+    pocketButton.addShadow()
     
-    self.view.addSubview(button)
+    self.view.addSubview(pocketButton)
     
     NSLayoutConstraint.activate([
-      button.widthAnchor.constraint(equalToConstant: 60),
-      button.heightAnchor.constraint(equalToConstant: 60),
-      button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-      button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+      pocketButton.widthAnchor.constraint(equalToConstant: 60),
+      pocketButton.heightAnchor.constraint(equalToConstant: 60),
+      pocketButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+      pocketButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
     ])
   }
   

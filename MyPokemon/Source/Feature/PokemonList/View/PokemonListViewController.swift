@@ -40,29 +40,35 @@ class PokemonListViewController: UIViewController {
 
 extension PokemonListViewController: PokemonListViewModelDelegate {
   func updateFetchState() {
-    let label = UILabel()
-    label.text = viewModel.fetchingState?.rawValue
-    label.font = UIFont.systemFont(ofSize: 17.0)
-    label.textColor = viewModel.fetchingState == PokemonListFetchState.apiError ? .red : .white
-    let barButton = UIBarButtonItem(customView: label)
-    navigationItem.rightBarButtonItem = barButton
+    DispatchQueue.main.async {
+      let label = UILabel()
+      label.text = self.viewModel.fetchingState?.rawValue
+      label.font = UIFont.systemFont(ofSize: 17.0)
+      label.textColor = self.viewModel.fetchingState == PokemonListFetchState.apiError ? .red : .white
+      let barButton = UIBarButtonItem(customView: label)
+      self.navigationItem.rightBarButtonItem = barButton
+    }
   }
   
   func refresh() {
-    collectionView.reloadData()
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+    }
   }
   
   func onPocketChange() {
-    collectionView.reloadData()
-    let zoomAnimation = CGAffineTransform(scaleX: 1.2, y: 1.2)
-    UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve) {
-      self.pocketButton.transform = zoomAnimation
-    } completion: { (_) in
-      UIView.animate(withDuration: 0.4, delay: 0,
-                     usingSpringWithDamping: 0.5,
-                     initialSpringVelocity: 0.2,
-                     options: .curveEaseOut) {
-        self.pocketButton.transform = zoomAnimation.inverted()
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+      let zoomAnimation = CGAffineTransform(scaleX: 1.2, y: 1.2)
+      UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve) {
+        self.pocketButton.transform = zoomAnimation
+      } completion: { (_) in
+        UIView.animate(withDuration: 0.4, delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0.2,
+                       options: .curveEaseOut) {
+          self.pocketButton.transform = zoomAnimation.inverted()
+        }
       }
     }
   }

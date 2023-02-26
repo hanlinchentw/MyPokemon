@@ -33,41 +33,48 @@ class PokemonDetailView: UIView {
   
   // Setup UI
   func configure() {
-    tableView.reloadData()
-    if let url = URL(string: pokemonDetail?.imageUrl ?? "") {
-      print(url)
-      imageView.kf.setImage(with: url)
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+      if let urlString = self.pokemonDetail?.imageUrl,
+          let url = URL(string: urlString) {
+        self.imageView.kf.setImage(with: url)
+      } else {
+        self.imageView.image = UIImage(systemName: "questionmark")
+        self.imageView.tintColor = .lightGray
+      }
     }
   }
   
   func setupUI() {
-    backgroundColor = .white
-    addSubview(imageView)
-    imageView.translatesAutoresizingMaskIntoConstraints = false
-    imageView.contentMode = .scaleAspectFit
-    NSLayoutConstraint.activate([
-      imageView.topAnchor.constraint(equalTo: topAnchor),
-      imageView.leftAnchor.constraint(equalTo: leftAnchor),
-      imageView.rightAnchor.constraint(equalTo: rightAnchor),
-      imageView.widthAnchor.constraint(equalToConstant: 120),
-      imageView.heightAnchor.constraint(equalToConstant: 120)
-    ])
-    
-    // UITableView
-    tableView.translatesAutoresizingMaskIntoConstraints = false
-    tableView.dataSource = self
-    tableView.delegate = self
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-    tableView.tableFooterView = UIView() // 隱藏 UITableView 底部多餘的 separator line
-    tableView.backgroundColor = .lightGray // 使用 group style 的背景顏色
-    addSubview(tableView)
-    
-    NSLayoutConstraint.activate([
-      tableView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-      tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-      tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-      tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
-    ])
+    DispatchQueue.main.async {
+      self.backgroundColor = .white
+      self.addSubview(self.imageView)
+      self.imageView.translatesAutoresizingMaskIntoConstraints = false
+      self.imageView.contentMode = .scaleAspectFit
+      NSLayoutConstraint.activate([
+        self.imageView.topAnchor.constraint(equalTo: self.topAnchor),
+        self.imageView.leftAnchor.constraint(equalTo: self.leftAnchor),
+        self.imageView.rightAnchor.constraint(equalTo: self.rightAnchor),
+        self.imageView.widthAnchor.constraint(equalToConstant: 120),
+        self.imageView.heightAnchor.constraint(equalToConstant: 120)
+      ])
+      
+      // UITableView
+      self.tableView.translatesAutoresizingMaskIntoConstraints = false
+      self.tableView.dataSource = self
+      self.tableView.delegate = self
+      self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+      self.tableView.tableFooterView = UIView() // 隱藏 UITableView 底部多餘的 separator line
+      self.tableView.backgroundColor = .lightGray // 使用 group style 的背景顏色
+      self.addSubview(self.tableView)
+      
+      NSLayoutConstraint.activate([
+        self.tableView.topAnchor.constraint(equalTo: self.imageView.bottomAnchor),
+        self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        self.tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+      ])
+    }
   }
 }
 

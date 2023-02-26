@@ -23,14 +23,18 @@ class PokemonDetailViewController: UIViewController {
 
 extension PokemonDetailViewController {
   func setupUI() {
-    detailView = PokemonDetailView()
-    detailView!.frame = view.bounds
-    view.addSubview(detailView!)
+    DispatchQueue.main.async {
+      self.detailView = PokemonDetailView()
+      self.detailView!.frame = self.view.bounds
+      self.view.addSubview(self.detailView!)
+    }
   }
   
   func setupNavbar() {
-    self.navigationController?.navigationBar.isTranslucent = false
-    self.navigationController?.navigationBar.prefersLargeTitles = false
+    DispatchQueue.main.async {
+      self.navigationController?.navigationBar.isTranslucent = false
+      self.navigationController?.navigationBar.prefersLargeTitles = false
+    }
   }
 }
 
@@ -47,10 +51,13 @@ extension PokemonDetailViewController: PokemonDetailViewInput {
   }
   
   func onError(_ error: Error?) {
-    let alertVC = UIAlertController(title: "Network error", message: "Something went wrong when we want to fetch data remotely ...\n, error=\(error?.localizedDescription)", preferredStyle: .alert)
-    let action = UIAlertAction(title: "OK", style: .cancel)
-    alertVC.addAction(action)
-    self.present(alertVC, animated: true)
+    DispatchQueue.main.async {
+      let alertVC = UIAlertController(title: "Network error", message: "Something went wrong when we want to fetch data remotely ...\n, error=\(error?.localizedDescription)", preferredStyle: .alert)
+      let action = UIAlertAction(title: "OK", style: .cancel)
+      alertVC.addAction(action)
+      self.present(alertVC, animated: true)
+    }
+    
   }
 }
 

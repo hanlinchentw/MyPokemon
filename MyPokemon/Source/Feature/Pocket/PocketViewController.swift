@@ -11,7 +11,7 @@ class PocketViewController: UIViewController {
   static var cellIdentifier: String {
     NSStringFromClass(PocketViewController.self)
   }
-
+  
   let tableView = UITableView()
   
   var viewModel: PocketViewModelImpl!
@@ -48,24 +48,24 @@ extension PocketViewController: UITableViewDataSource, UITableViewDelegate {
     cell.textLabel?.text = viewModel.data[indexPath.row].name
     return cell
   }
-
+  
   func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
     .delete
   }
-
+  
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-      if editingStyle == .delete {
-        viewModel.release(indexPath)
-      }
+    if editingStyle == .delete {
+      viewModel.release(indexPath)
+    }
   }
 }
 
 extension PocketViewController: PocketViewInput {
   func onFetchCompleted() {
-    self.tableView.reloadData()
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
   }
   
-  func onFetchFailed() {
-  
-  }
+  func onFetchFailed() {}
 }

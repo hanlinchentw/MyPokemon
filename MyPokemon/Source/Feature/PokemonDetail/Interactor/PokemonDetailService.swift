@@ -55,7 +55,7 @@ extension PokemonDetailService {
   }
 
   struct Sprite: Codable {
-    let imageUrl: String
+    let imageUrl: String?
     enum CodingKeys: String, CodingKey {
       case imageUrl = "front_default"
     }

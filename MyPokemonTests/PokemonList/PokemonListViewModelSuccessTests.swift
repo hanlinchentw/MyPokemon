@@ -102,6 +102,13 @@ class PokemonListViewModelSuccessTests: XCTestCase, PokemonListViewModelSuccessT
 }
 
 extension PokemonListViewModelSuccessTests: PokemonListViewModelDelegate {
+  func onPocketChange() {
+    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+      self.expectation?.fulfill()
+      self.expectation = nil
+    })
+  }
+  
   func refresh() {
     // workround: write data need time, add 0.5s delay
     DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {

@@ -6,7 +6,6 @@ target 'MyPokemon' do
   use_frameworks!
 
   # Pods for MyPokemon
-  pod 'Swinject'
 	pod 'RealmSwift'
 	pod 'Kingfisher', '~> 7.0'
 

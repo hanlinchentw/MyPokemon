@@ -20,7 +20,6 @@ class PokemonListViewController: UIViewController {
     collectionView.prefetchDataSource = self
     return collectionView
   }()
-  var bottomConstraint: NSLayoutConstraint?
   
   var viewModel: PokemonListViewModel!
   var coordinator: PokemonListCoodinator!
@@ -98,14 +97,11 @@ extension PokemonListViewController {
     self.view.backgroundColor = .white
     self.view.addSubview(collectionView)
     
-    bottomConstraint = collectionView.bottomAnchor
-      .constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
-    
     NSLayoutConstraint.activate([
       collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
       collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
       collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-      bottomConstraint!
+      collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
     ])
   }
   

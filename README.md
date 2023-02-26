@@ -3,17 +3,17 @@
 <table>
     <tr>
       <td>
-        Pokemon list(infinite scroll) <br>
-        <img src="./ScreenShot/pokemon_list_infinite_scroll.gif" width="500">
+        Pokemon list(infinite scroll)<br>
+        <img src="./Screenshot/pokemon_list_infinite_scroll.gif" width="300">
       </td>
       <td>
         Add or delete Favorite<br>
-        <img src="./ScreenShot/pokemon_list_add_and_delete_favorite.gif"
-        width="500">
+        <img src="./Screenshot/pokemon_list_add_and_delete_favorite.gif"
+        width="300">
       </td>
       <td>
         Pokemon detail <br>
-        <img src="./ScreenShot/pokemon_detail.png" width="500">
+        <img src="./Screenshot/pokemon_detail.png" width="300">
       </td>
     </tr>
 </table>

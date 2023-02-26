@@ -4,16 +4,16 @@
     <tr>
       <td>
         Pokemon list(infinite scroll)<br>
-        <img src="./Screenshot/pokemon_list_infinite_scroll.gif" width="300">
+        <img src="./Screenshot/pokemon_list_infinite_scroll.gif" width="250">
       </td>
       <td>
         Add or delete Favorite<br>
         <img src="./Screenshot/pokemon_list_add_and_delete_favorite.gif"
-        width="300">
+        width="250">
       </td>
       <td>
         Pokemon detail <br>
-        <img src="./Screenshot/pokemon_detail.png" width="300">
+        <img src="./Screenshot/pokemon_detail.png" width="250">
       </td>
     </tr>
 </table>

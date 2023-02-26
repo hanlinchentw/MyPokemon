@@ -9,7 +9,7 @@ import XCTest
 @testable import MyPokemon
 
 protocol PokemonListServiceFailureTestsSpec {
-  func test_with_successful_response_and_update_results()
+  func test_with_failed_response_and_error_should_be_not_nil()
 }
 
 final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailureTestsSpec {
@@ -33,7 +33,7 @@ final class PokemonListServiceFailureTests: XCTestCase, PokemonListServiceFailur
     networkingManagerMock = nil
   }
   
-  func test_with_successful_response_and_update_results() {
+  func test_with_failed_response_and_error_should_be_not_nil() {
     expectation = expectation(description: "Error Occured!")
     
     XCTAssertNil(listService.nextUrl, "Before loading any data, nextUrl should be nil.")

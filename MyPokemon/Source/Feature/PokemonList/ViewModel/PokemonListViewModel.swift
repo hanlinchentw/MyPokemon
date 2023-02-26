@@ -15,8 +15,12 @@ enum PokemonListFetchState: String, Equatable {
 }
 
 protocol PokemonListViewModelImpl {
-  var fetchingState: PokemonListFetchState? { get set }
   func fetchList()
+  var numberOfSection: Int { get }
+  var fetchingState: PokemonListFetchState? { get set }
+  func numberOfRows(in section: Int) -> Int
+  func cellViewModel(for indexPath: IndexPath) -> PokemonListItemViewModel
+  func cellShouldLoading(for indexPath: IndexPath) -> Bool
 }
 
 protocol PokemonListViewModelDelegate: AnyObject {
@@ -25,9 +29,9 @@ protocol PokemonListViewModelDelegate: AnyObject {
 }
 
 class PokemonListViewModel: PokemonListViewModelImpl {
-  
-  private let apiService: PokemonListServiceImpl
-  private let persistenceService: PokemonPersistenceServiceImpl
+
+  let apiService: PokemonListServiceImpl
+  let persistenceService: PokemonPersistenceServiceImpl
   
   weak var delegate: PokemonListViewModelDelegate?
   

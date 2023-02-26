@@ -8,7 +8,11 @@
 import XCTest
 @testable import MyPokemon
 
-final class PokemonDetailServiceFailureTests: XCTestCase {
+protocol PokemonDetailServiceFailureTestsSpec {
+  func test_with_failed_response_and_error_should_not_be_nil()
+}
+
+final class PokemonDetailServiceFailureTests: XCTestCase, PokemonDetailServiceFailureTestsSpec {
   var networkingManagerMock: NetworkingManagerImpl!
   var detailService: PokemonDetailService!
 
@@ -29,7 +33,7 @@ final class PokemonDetailServiceFailureTests: XCTestCase {
     networkingManagerMock = nil
   }
   
-  func test_with_successful_response_and_update_result() {
+  func test_with_failed_response_and_error_should_not_be_nil() {
     XCTAssertNil(error, "This is failure case and error should not be nil")
     XCTAssertNil(result, "This is failure case and result should be nil")
     

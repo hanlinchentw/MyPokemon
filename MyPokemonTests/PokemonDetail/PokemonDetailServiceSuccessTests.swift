@@ -8,7 +8,11 @@
 import XCTest
 @testable import MyPokemon
 
-final class PokemonDetailServiceSuccessTests: XCTestCase {
+protocol PokemonDetailServiceSuccessTestsSpec {
+  func test_with_successful_response_and_update_result()
+}
+
+final class PokemonDetailServiceSuccessTests: XCTestCase, PokemonDetailServiceSuccessTestsSpec {
   var networkingManagerMock: NetworkingManagerImpl!
   var detailService: PokemonDetailService!
 

@@ -23,6 +23,12 @@ class PocketViewController: UIViewController {
     tableView.dataSource = self    
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: PocketViewController.cellIdentifier)
     view.addSubview(tableView)
+    
+    navigationController?.navigationBar.isHidden = false
+    navigationController?.navigationBar.isTranslucent = false
+    navigationItem.title = "My Pokemon"
+    navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.black]
   }
   
   override func viewDidLayoutSubviews() {

@@ -25,7 +25,10 @@ class PocketCoodinator: Coordinator {
     viewModel.viewInput = pocketVC
     persistenceService.delegate = viewModel
 
-    navigationController.present(pocketVC, animated: true)
+    
+    let nav = UINavigationController(rootViewController: pocketVC)
+    
+    navigationController.present(nav, animated: true)
   }
 }
 

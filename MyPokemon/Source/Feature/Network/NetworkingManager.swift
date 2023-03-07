@@ -29,12 +29,15 @@ final class NetworkingManager: NetworkingManagerImpl {
     let request = buildRequest(from: url, methodType: method)
     
     if useCache, let cacheData = URLCache.shared.cachedResponse(for: request) {
-      guard let res: T = try? self.decodeResponse(cacheData.data) else {
-        completion(.failure(NetworkingError.failedToDecode))
+      if let cacheDate = cacheData.userInfo?["ExpirationDate"] as? TimeInterval,
+              Date().timeIntervalSince1970 < cacheDate {
+        guard let res: T = try? self.decodeResponse(cacheData.data) else {
+          completion(.failure(NetworkingError.failedToDecode))
+          return
+        }
+        completion(.success(res))
         return
       }
-      completion(.success(res))
-      return
     }
     
     let task = session.dataTask(with: request) { data, response, error in
@@ -52,7 +55,7 @@ final class NetworkingManager: NetworkingManagerImpl {
       }
       
       if useCache {
-        let expirationDate = Date(timeIntervalSinceNow: 60 * 60 * 24) // 1 day
+        let expirationDate = Date(timeIntervalSinceNow: 60) // 1 day
         let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: ["ExpirationDate": expirationDate.timeIntervalSince1970], storagePolicy: .allowed)
         URLCache.shared.storeCachedResponse(cachedResponse, for: request)
       }
